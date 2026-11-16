@@ -1,0 +1,1674 @@
+<!doctype html>
+<html lang="es-MX" class="h-full bg-slate-50"><head><meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Creador de Flyers y Tarjetas para Oficios</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Estilos personalizados para container queries y simulador de impresión */
+    .flyer-card {
+      container-type: inline-size;
+      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .aspect-feed { aspect-ratio: 4 / 5; }
+    .aspect-story { aspect-ratio: 9 / 16; }
+
+    /* Estilos editable in-situ */
+    .editable-active [contenteditable="true"] {
+      outline: 2px dashed #0284c7;
+      outline-offset: 3px;
+      border-radius: 4px;
+      cursor: text;
+    }
+    .editable-active [contenteditable="true"]:hover {
+      background-color: rgba(2, 132, 199, 0.05);
+    }
+
+    /* Print styles */
+    @media print {
+      body { background: white !important; }
+      .no-print { display: none !important; }
+      .print-area { padding: 0 !important; margin: 0 !important; max-width: none !important; }
+      .flyer-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 15px !important; }
+      .flyer-card { break-inside: avoid; page-break-inside: avoid; box-shadow: none !important; border: 1px solid #ccc !important; }
+    }
+  </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:Inter, system-ui, -apple-system, sans-serif;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.pointer-events-none{pointer-events:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.sticky{position:sticky}.-bottom-10{bottom:-2.5rem}.-right-10{right:-2.5rem}.bottom-6{bottom:1.5rem}.right-6{right:1.5rem}.top-0{top:0px}.z-10{z-index:10}.z-50{z-index:50}.mx-auto{margin-left:auto;margin-right:auto}.-mx-6{margin-left:-1.5rem;margin-right:-1.5rem}.mx-1{margin-left:0.25rem;margin-right:0.25rem}.my-auto{margin-top:auto;margin-bottom:auto}.mb-1{margin-bottom:0.25rem}.mb-3{margin-bottom:0.75rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mt-1{margin-top:0.25rem}.mt-2{margin-top:0.5rem}.mt-6{margin-top:1.5rem}.mt-auto{margin-top:auto}.-mb-6{margin-bottom:-1.5rem}.mb-2{margin-bottom:0.5rem}.mt-0\.5{margin-top:0.125rem}.mt-4{margin-top:1rem}.line-clamp-2{overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}.block{display:block}.inline-block{display:inline-block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.aspect-\[9\/5\]{aspect-ratio:9/5}.h-10{height:2.5rem}.h-16{height:4rem}.h-72{height:18rem}.h-full{height:100%}.h-14{height:3.5rem}.h-3{height:0.75rem}.h-5{height:1.25rem}.h-6{height:1.5rem}.h-7{height:1.75rem}.h-8{height:2rem}.w-10{width:2.5rem}.w-72{width:18rem}.w-full{width:100%}.w-14{width:3.5rem}.w-16{width:4rem}.w-3{width:0.75rem}.w-5{width:1.25rem}.w-6{width:1.5rem}.w-7{width:1.75rem}.w-8{width:2rem}.max-w-3xl{max-width:48rem}.max-w-7xl{max-width:80rem}.max-w-\[65\%\]{max-width:65%}.flex-1{flex:1 1 0%}.shrink-0{flex-shrink:0}.translate-y-2{--tw-translate-y:0.5rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.translate-y-0{--tw-translate-y:0px;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.transform{transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.cursor-pointer{cursor:pointer}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-center{align-items:center}.items-baseline{align-items:baseline}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1\.5{gap:0.375rem}.gap-2{gap:0.5rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.gap-8{gap:2rem}.gap-1{gap:0.25rem}.gap-2\.5{gap:0.625rem}.space-y-0\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.125rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.125rem * var(--tw-space-y-reverse))}.space-y-1 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.25rem * var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rounded-2xl{border-radius:1rem}.rounded-3xl{border-radius:1.5rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-xl{border-radius:0.75rem}.rounded{border-radius:0.25rem}.rounded-md{border-radius:0.375rem}.border{border-width:1px}.border-b{border-bottom-width:1px}.border-l{border-left-width:1px}.border-t{border-top-width:1px}.border-dotted{border-style:dotted}.border-sky-400\/30{border-color:rgb(56 189 248 / 0.3)}.border-sky-500\/30{border-color:rgb(14 165 233 / 0.3)}.border-slate-100{--tw-border-opacity:1;border-color:rgb(241 245 249 / var(--tw-border-opacity, 1))}.border-slate-200{--tw-border-opacity:1;border-color:rgb(226 232 240 / var(--tw-border-opacity, 1))}.border-slate-300{--tw-border-opacity:1;border-color:rgb(203 213 225 / var(--tw-border-opacity, 1))}.border-slate-700{--tw-border-opacity:1;border-color:rgb(51 65 85 / var(--tw-border-opacity, 1))}.border-slate-800{--tw-border-opacity:1;border-color:rgb(30 41 59 / var(--tw-border-opacity, 1))}.border-slate-200\/50{border-color:rgb(226 232 240 / 0.5)}.bg-sky-100{--tw-bg-opacity:1;background-color:rgb(224 242 254 / var(--tw-bg-opacity, 1))}.bg-sky-500{--tw-bg-opacity:1;background-color:rgb(14 165 233 / var(--tw-bg-opacity, 1))}.bg-sky-500\/10{background-color:rgb(14 165 233 / 0.1)}.bg-sky-500\/20{background-color:rgb(14 165 233 / 0.2)}.bg-sky-600{--tw-bg-opacity:1;background-color:rgb(2 132 199 / var(--tw-bg-opacity, 1))}.bg-slate-100{--tw-bg-opacity:1;background-color:rgb(241 245 249 / var(--tw-bg-opacity, 1))}.bg-slate-200{--tw-bg-opacity:1;background-color:rgb(226 232 240 / var(--tw-bg-opacity, 1))}.bg-slate-50{--tw-bg-opacity:1;background-color:rgb(248 250 252 / var(--tw-bg-opacity, 1))}.bg-slate-800{--tw-bg-opacity:1;background-color:rgb(30 41 59 / var(--tw-bg-opacity, 1))}.bg-slate-900{--tw-bg-opacity:1;background-color:rgb(15 23 42 / var(--tw-bg-opacity, 1))}.bg-transparent{background-color:transparent}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-slate-800\/80{background-color:rgb(30 41 59 / 0.8)}.bg-gradient-to-r{background-image:linear-gradient(to right, var(--tw-gradient-stops))}.bg-gradient-to-tr{background-image:linear-gradient(to top right, var(--tw-gradient-stops))}.from-sky-500{--tw-gradient-from:#0ea5e9 var(--tw-gradient-from-position);--tw-gradient-to:rgb(14 165 233 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-slate-900{--tw-gradient-from:#0f172a var(--tw-gradient-from-position);--tw-gradient-to:rgb(15 23 42 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.via-indigo-950{--tw-gradient-to:rgb(30 27 75 / 0)  var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), #1e1b4b var(--tw-gradient-via-position), var(--tw-gradient-to)}.to-indigo-500{--tw-gradient-to:#6366f1 var(--tw-gradient-to-position)}.to-slate-900{--tw-gradient-to:#0f172a var(--tw-gradient-to-position)}.p-1{padding:0.25rem}.p-4{padding:1rem}.p-6{padding:1.5rem}.p-1\.5{padding:0.375rem}.p-2{padding:0.5rem}.p-3{padding:0.75rem}.p-5{padding:1.25rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-2\.5{padding-left:0.625rem;padding-right:0.625rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-3\.5{padding-left:0.875rem;padding-right:0.875rem}.px-4{padding-left:1rem;padding-right:1rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-6{padding-top:1.5rem;padding-bottom:1.5rem}.py-4{padding-top:1rem;padding-bottom:1rem}.pb-3{padding-bottom:0.75rem}.pl-3{padding-left:0.75rem}.pb-1{padding-bottom:0.25rem}.pb-2{padding-bottom:0.5rem}.pb-4{padding-bottom:1rem}.pt-1{padding-top:0.25rem}.pt-2{padding-top:0.5rem}.pt-3{padding-top:0.75rem}.pt-4{padding-top:1rem}.text-center{text-align:center}.text-right{text-align:right}.font-mono{font-family:ui-monospace, SFMono-Regular, Menlo, monospace}.font-sans{font-family:Inter, system-ui, -apple-system, sans-serif}.text-2xl{font-size:1.5rem;line-height:2rem}.text-\[10px\]{font-size:10px}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.text-\[1\.8cqw\]{font-size:1.8cqw}.text-\[10cqw\]{font-size:10cqw}.text-\[14cqw\]{font-size:14cqw}.text-\[2\.2cqw\]{font-size:2.2cqw}.text-\[2\.4cqw\]{font-size:2.4cqw}.text-\[2\.5cqw\]{font-size:2.5cqw}.text-\[2\.6cqw\]{font-size:2.6cqw}.text-\[2\.8cqw\]{font-size:2.8cqw}.text-\[22cqw\]{font-size:22cqw}.text-\[2cqw\]{font-size:2cqw}.text-\[3\.2cqw\]{font-size:3.2cqw}.text-\[3\.4cqw\]{font-size:3.4cqw}.text-\[3\.5cqw\]{font-size:3.5cqw}.text-\[3\.8cqw\]{font-size:3.8cqw}.text-\[3cqw\]{font-size:3cqw}.text-\[4\.5cqw\]{font-size:4.5cqw}.text-\[4\.8cqw\]{font-size:4.8cqw}.text-\[4cqw\]{font-size:4cqw}.text-\[5\.5cqw\]{font-size:5.5cqw}.text-\[5cqw\]{font-size:5cqw}.text-\[6\.5cqw\]{font-size:6.5cqw}.text-\[7cqw\]{font-size:7cqw}.text-\[8\.5cqw\]{font-size:8.5cqw}.font-black{font-weight:900}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.font-normal{font-weight:400}.font-semibold{font-weight:600}.font-medium{font-weight:500}.uppercase{text-transform:uppercase}.leading-relaxed{line-height:1.625}.leading-tight{line-height:1.25}.leading-\[0\.95\]{line-height:0.95}.leading-none{line-height:1}.leading-snug{line-height:1.375}.tracking-tight{letter-spacing:-0.025em}.tracking-wider{letter-spacing:0.05em}.tracking-tighter{letter-spacing:-0.05em}.tracking-widest{letter-spacing:0.1em}.text-sky-300{--tw-text-opacity:1;color:rgb(125 211 252 / var(--tw-text-opacity, 1))}.text-sky-600{--tw-text-opacity:1;color:rgb(2 132 199 / var(--tw-text-opacity, 1))}.text-sky-800{--tw-text-opacity:1;color:rgb(7 89 133 / var(--tw-text-opacity, 1))}.text-slate-200{--tw-text-opacity:1;color:rgb(226 232 240 / var(--tw-text-opacity, 1))}.text-slate-300{--tw-text-opacity:1;color:rgb(203 213 225 / var(--tw-text-opacity, 1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184 / var(--tw-text-opacity, 1))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139 / var(--tw-text-opacity, 1))}.text-slate-600{--tw-text-opacity:1;color:rgb(71 85 105 / var(--tw-text-opacity, 1))}.text-slate-700{--tw-text-opacity:1;color:rgb(51 65 85 / var(--tw-text-opacity, 1))}.text-slate-800{--tw-text-opacity:1;color:rgb(30 41 59 / var(--tw-text-opacity, 1))}.text-slate-900{--tw-text-opacity:1;color:rgb(15 23 42 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.opacity-0{opacity:0}.opacity-15{opacity:0.15}.opacity-60{opacity:0.6}.opacity-70{opacity:0.7}.opacity-75{opacity:0.75}.opacity-80{opacity:0.8}.opacity-90{opacity:0.9}.opacity-100{opacity:1}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.blur-3xl{--tw-blur:blur(64px);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-transform{transition-property:transform;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-300{transition-duration:300ms}.selection\:bg-sky-500 *::selection{--tw-bg-opacity:1;background-color:rgb(14 165 233 / var(--tw-bg-opacity, 1))}.selection\:text-white *::selection{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.selection\:bg-sky-500::selection{--tw-bg-opacity:1;background-color:rgb(14 165 233 / var(--tw-bg-opacity, 1))}.selection\:text-white::selection{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.hover\:bg-red-50:hover{--tw-bg-opacity:1;background-color:rgb(254 242 242 / var(--tw-bg-opacity, 1))}.hover\:bg-sky-600:hover{--tw-bg-opacity:1;background-color:rgb(2 132 199 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-700:hover{--tw-bg-opacity:1;background-color:rgb(51 65 85 / var(--tw-bg-opacity, 1))}.hover\:bg-sky-700:hover{--tw-bg-opacity:1;background-color:rgb(3 105 161 / var(--tw-bg-opacity, 1))}.hover\:text-red-600:hover{--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity, 1))}.hover\:text-slate-900:hover{--tw-text-opacity:1;color:rgb(15 23 42 / var(--tw-text-opacity, 1))}.hover\:text-white:hover{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.hover\:shadow-xl:hover{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.focus\:ring-2:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.focus\:ring-sky-500:focus{--tw-ring-opacity:1;--tw-ring-color:rgb(14 165 233 / var(--tw-ring-opacity, 1))}.group:hover .group-hover\:scale-\[1\.02\]{--tw-scale-x:1.02;--tw-scale-y:1.02;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@media (min-width: 640px){.sm\:block{display:block}.sm\:gap-3{gap:0.75rem}.sm\:p-8{padding:2rem}.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:text-4xl{font-size:2.25rem;line-height:2.5rem}.sm\:text-lg{font-size:1.125rem;line-height:1.75rem}.sm\:text-sm{font-size:0.875rem;line-height:1.25rem}}@media (min-width: 768px){.md\:col-span-2{grid-column:span 2 / span 2}.md\:col-span-4{grid-column:span 4 / span 4}.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}}@media (min-width: 1024px){.lg\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.lg\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}.lg\:px-8{padding-left:2rem;padding-right:2rem}}@media (min-width: 1280px){.xl\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}}</style></head>
+<body class="h-full font-sans text-slate-800 flex flex-col bg-slate-100 selection:bg-sky-500 selection:text-white">
+
+  <!-- TOP STICKY TOOLBAR -->
+  <header class="sticky top-0 z-50 bg-slate-900 text-white border-b border-slate-800 no-print shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      
+      <!-- Brand & Selector -->
+      <div class="flex items-center gap-3 cursor-pointer" id="brandLogoBtn">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-500 flex items-center justify-center text-white font-black text-xl shadow-md">
+          ✦
+        </div>
+        <div>
+          <h1 class="font-extrabold text-white leading-tight text-base sm:text-lg flex items-center gap-2">
+            FlyerCraft Studio 
+            <span class="text-[10px] bg-sky-500/20 text-sky-300 border border-sky-500/30 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">v2.0 Visual</span>
+          </h1>
+          <p class="text-xs text-slate-400 hidden sm:block">Galería y Creador Interactivo de Flyers &amp; Tarjetas</p>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
+        <!-- Main Navigation View Toggle -->
+        <div class="flex items-center bg-slate-800 p-1 rounded-xl border border-slate-700">
+          <button id="viewGalleryBtn" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white flex items-center gap-1.5">
+            <span>🖼️ Explorar Galería</span>
+          </button>
+          <button id="viewEditorBtn" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition bg-sky-600 text-white shadow-sm flex items-center gap-1.5">
+            <span>🎨 Canvas Editor</span>
+          </button>
+        </div>
+
+        <!-- Mode Editor Toggle -->
+        <button id="toggleEditBtn" class="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold border border-slate-700 bg-slate-800 text-slate-200 hover:bg-slate-700 transition shadow-sm">
+          <span>✎ Editar en Canvas</span>
+        </button>
+
+        <!-- Print & Export -->
+        <button id="printBtn" class="px-3.5 py-2 rounded-lg text-xs font-semibold border border-slate-700 bg-slate-800 text-slate-200 hover:bg-slate-700 transition shadow-sm">
+          🖨️ PDF / Imprimir
+        </button>
+
+        <button id="downloadHtmlBtn" class="px-4 py-2 rounded-lg text-xs font-bold bg-sky-500 hover:bg-sky-600 text-white transition shadow-md flex items-center gap-1.5">
+          <span>⬇️ Guardar HTML</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <div class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-8">
+    
+    <!-- ========================================================================= -->
+    <!-- VISTA 1: CATÁLOGO VISUAL / SHOWROOM (VISIBLE DESDE EL INICIO) -->
+    <!-- ========================================================================= -->
+    <section id="galleryView" class="flex flex-col gap-8 no-print hidden">
+      
+      <!-- HERO BANNER -->
+      <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl border border-slate-800 relative overflow-hidden">
+        <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="relative z-10 max-w-3xl">
+          <span class="inline-block px-3 py-1 bg-sky-500/20 text-sky-300 border border-sky-400/30 text-xs font-extrabold rounded-full uppercase tracking-wider mb-3">
+            Catálogo de Plantillas Profesionales
+          </span>
+          <h2 class="text-2xl sm:text-4xl font-black tracking-tight leading-tight">
+            Elige una plantilla y personalízala al instante
+          </h2>
+          <p class="text-slate-300 text-xs sm:text-sm mt-2 leading-relaxed">
+            Explora más de 40 diseños prediseñados para Panaderías, Florerías, Plomeros, Electricistas, Albañiles, Dentistas, Mecánicos y Carpinteros. Haz clic en cualquiera para abrirla en la mesa de trabajo.
+          </p>
+
+          <!-- Filtro de Categorías / Oficios -->
+          <div class="mt-6 flex flex-wrap items-center gap-2" id="tradeFilterContainer">
+          <button data-filter="all" class="trade-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white border border-slate-700">
+            Todos los Oficios
+          </button>
+        
+            <button data-filter="bakery" class="trade-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white border border-slate-700">
+              Panadería &amp; Pastelería
+            </button>
+          
+            <button data-filter="florist" class="trade-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white border border-slate-700">
+              Florería &amp; Botánica
+            </button>
+          
+            <button data-filter="plumber" class="trade-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white border border-slate-700">
+              Plomería &amp; Fontanería
+            </button>
+          
+            <button data-filter="electrician" class="trade-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white border border-slate-700">
+              Electricista &amp; Automatización
+            </button>
+          
+            <button data-filter="mason" class="trade-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white border border-slate-700">
+              Albañilería &amp; Construcción
+            </button>
+          
+            <button data-filter="dentist" class="trade-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition bg-sky-500 text-white shadow-sm">
+              Clínica &amp; Laboratorio Dental
+            </button>
+          
+            <button data-filter="carpenter" class="trade-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white border border-slate-700">
+              Carpintería &amp; Ebanistería
+            </button>
+          
+            <button data-filter="mechanic" class="trade-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white border border-slate-700">
+              Taller Mecánico Automotriz
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SHOWROOM GRID DE PLANTILLAS -->
+      <div>
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h3 class="text-xl font-black text-slate-900 flex items-center gap-2">
+              <span id="galleryTitleText">Plantillas de Clínica &amp; Laboratorio Dental</span>
+              <span id="galleryCountBadge" class="text-xs bg-slate-200 text-slate-700 px-2.5 py-0.5 rounded-full font-bold">4 plantillas activas</span>
+            </h3>
+            <p class="text-xs text-slate-500">Cada oficio cuenta con mínimo 4 estilos de flyers + tarjetas frente y vuelta.</p>
+          </div>
+
+          <!-- Selector de Formato para Previsualización -->
+          <div class="flex items-center gap-2 bg-white p-1 rounded-xl border border-slate-200 shadow-sm">
+            <span class="text-xs font-bold text-slate-400 px-2">Vista:</span>
+            <button id="galAspectFeed" class="px-3 py-1 rounded-lg text-xs font-bold bg-slate-900 text-white shadow-sm">
+              4:5 Feed
+            </button>
+            <button id="galAspectStory" class="px-3 py-1 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900">
+              9:16 Story
+            </button>
+          </div>
+        </div>
+
+        <!-- CONTAINER DEL CATÁLOGO (SHOWROOM) -->
+        <div id="galleryGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              <div class="group bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
+                <!-- Preview Header Card -->
+                <div class="p-3 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <div class="w-5 h-5 text-slate-700"><svg class="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.5 2 2 6.5 2 12c0 3.5 2.5 6.5 4 10 1.5-3.5 1-6.5 3-7 2-.5 2.5 2 3 2s1-2.5 3-2c2 .5 1.5 3.5 3 7 1.5-3.5 4-6.5 4-10 0-5.5-4.5-10-10-10z"></path></svg></div>
+                    <span class="text-xs font-bold text-slate-800">Clínica &amp; Laboratorio Dental</span>
+                  </div>
+                  <span class="text-[10px] bg-slate-200 font-bold px-2 py-0.5 rounded text-slate-600 uppercase">Flyer A</span>
+                </div>
+
+                <!-- Template Canvas Thumbnail -->
+                <div class="p-4 bg-slate-100 flex-1 flex items-center justify-center">
+                  <div class="flyer-card aspect-feed w-full rounded-xl p-4 flex flex-col justify-between shadow-md group-hover:scale-[1.02] transition-transform duration-300" style="background-color: #F0FDFA; color: #134E4A;">
+                    
+                <div class="flex justify-between items-center border-b border-current/10 pb-2 mb-2">
+                  <div class="w-6 h-6 p-1 rounded bg-current/10" style="color:#0D9488"><svg class="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.5 2 2 6.5 2 12c0 3.5 2.5 6.5 4 10 1.5-3.5 1-6.5 3-7 2-.5 2.5 2 3 2s1-2.5 3-2c2 .5 1.5 3.5 3 7 1.5-3.5 4-6.5 4-10 0-5.5-4.5-10-10-10z"></path></svg></div>
+                  <span class="text-[2.2cqw] font-bold opacity-60">Clínica &amp; Laboratorio Dental</span>
+                </div>
+                <div class="my-auto">
+                  <span class="text-[2.5cqw] font-bold block" style="color:#0D9488">Dra. Marisol Hdz - Cirujano Dentista</span>
+                  <h4 class="text-[5.5cqw] font-black leading-none mb-1">Clínica Dental Sonrisas</h4>
+                  <p class="text-[2.8cqw] opacity-80 line-clamp-2">Cuidamos la salud estética y funcional de tu sonrisa.</p>
+                </div>
+                <div class="pt-2 border-t border-current/10 flex justify-between text-[2.5cqw] font-mono">
+                  <span>55 1122 3344</span>
+                  <span>Consultorio Médico Central</span>
+                </div>
+              
+                  </div>
+                </div>
+
+                <!-- Action Footer -->
+                <div class="p-3 bg-white flex items-center justify-between gap-2 border-t border-slate-100">
+                  <span class="text-xs font-semibold text-slate-500">Presentación &amp; Marca</span>
+                  <button data-open-trade="dentist" data-tab="flyers" class="open-template-btn px-3 py-1.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-xs font-bold transition flex items-center gap-1 shadow-sm">
+                    <span>Editar Plantilla ➔</span>
+                  </button>
+                </div>
+              </div>
+            
+              <div class="group bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
+                <!-- Preview Header Card -->
+                <div class="p-3 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <div class="w-5 h-5 text-slate-700"><svg class="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.5 2 2 6.5 2 12c0 3.5 2.5 6.5 4 10 1.5-3.5 1-6.5 3-7 2-.5 2.5 2 3 2s1-2.5 3-2c2 .5 1.5 3.5 3 7 1.5-3.5 4-6.5 4-10 0-5.5-4.5-10-10-10z"></path></svg></div>
+                    <span class="text-xs font-bold text-slate-800">Clínica &amp; Laboratorio Dental</span>
+                  </div>
+                  <span class="text-[10px] bg-slate-200 font-bold px-2 py-0.5 rounded text-slate-600 uppercase">Flyer B</span>
+                </div>
+
+                <!-- Template Canvas Thumbnail -->
+                <div class="p-4 bg-slate-100 flex-1 flex items-center justify-center">
+                  <div class="flyer-card aspect-feed w-full rounded-xl p-4 flex flex-col justify-between shadow-md group-hover:scale-[1.02] transition-transform duration-300" style="background-color: #F0FDFA; color: #134E4A;">
+                    
+                <div class="text-center border-b border-current/10 pb-2 mb-2">
+                  <h4 class="text-[4.5cqw] font-black" style="color:#0D9488">Lista de Precios</h4>
+                  <span class="text-[2.2cqw] font-bold opacity-60">Clínica Dental Sonrisas</span>
+                </div>
+                <div class="my-auto space-y-1">
+                  
+                    <div class="flex justify-between text-[2.5cqw]">
+                      <span class="truncate">Limpieza Dental Profunda Ultrasonido</span>
+                      <span class="font-bold" style="color:#0D9488">$$450</span>
+                    </div>
+                  
+                    <div class="flex justify-between text-[2.5cqw]">
+                      <span class="truncate">Resina Dental Estética</span>
+                      <span class="font-bold" style="color:#0D9488">$$550</span>
+                    </div>
+                  
+                    <div class="flex justify-between text-[2.5cqw]">
+                      <span class="truncate">Corona de Zirconia Monolítica</span>
+                      <span class="font-bold" style="color:#0D9488">$$1,800</span>
+                    </div>
+                  
+                </div>
+                <div class="pt-2 border-t border-current/10 text-center text-[2.6cqw] font-mono font-bold">
+                  55 1122 3344
+                </div>
+              
+                  </div>
+                </div>
+
+                <!-- Action Footer -->
+                <div class="p-3 bg-white flex items-center justify-between gap-2 border-t border-slate-100">
+                  <span class="text-xs font-semibold text-slate-500">Catálogo &amp; Precios</span>
+                  <button data-open-trade="dentist" data-tab="flyers" class="open-template-btn px-3 py-1.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-xs font-bold transition flex items-center gap-1 shadow-sm">
+                    <span>Editar Plantilla ➔</span>
+                  </button>
+                </div>
+              </div>
+            
+              <div class="group bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
+                <!-- Preview Header Card -->
+                <div class="p-3 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <div class="w-5 h-5 text-slate-700"><svg class="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.5 2 2 6.5 2 12c0 3.5 2.5 6.5 4 10 1.5-3.5 1-6.5 3-7 2-.5 2.5 2 3 2s1-2.5 3-2c2 .5 1.5 3.5 3 7 1.5-3.5 4-6.5 4-10 0-5.5-4.5-10-10-10z"></path></svg></div>
+                    <span class="text-xs font-bold text-slate-800">Clínica &amp; Laboratorio Dental</span>
+                  </div>
+                  <span class="text-[10px] bg-slate-200 font-bold px-2 py-0.5 rounded text-slate-600 uppercase">Flyer C</span>
+                </div>
+
+                <!-- Template Canvas Thumbnail -->
+                <div class="p-4 bg-slate-100 flex-1 flex items-center justify-center">
+                  <div class="flyer-card aspect-feed w-full rounded-xl p-4 flex flex-col justify-between shadow-md group-hover:scale-[1.02] transition-transform duration-300" style="background-color: #F0FDFA; color: #134E4A;">
+                    
+                <div class="flex justify-between items-center">
+                  <span class="px-2 py-0.5 rounded text-[2cqw] font-black text-white" style="background-color:#0D9488">OFERTA</span>
+                  <div class="w-5 h-5" style="color:#0D9488"><svg class="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.5 2 2 6.5 2 12c0 3.5 2.5 6.5 4 10 1.5-3.5 1-6.5 3-7 2-.5 2.5 2 3 2s1-2.5 3-2c2 .5 1.5 3.5 3 7 1.5-3.5 4-6.5 4-10 0-5.5-4.5-10-10-10z"></path></svg></div>
+                </div>
+                <div class="my-auto text-center">
+                  <div class="text-[14cqw] font-black leading-none" style="color:#0D9488">-25%</div>
+                  <h5 class="text-[4cqw] font-bold uppercase">Limpieza Ultrasonido y Blanqueamiento</h5>
+                </div>
+                <div class="text-center text-[2.5cqw] font-mono font-bold">
+                  Llama al: 55 1122 3344
+                </div>
+              
+                  </div>
+                </div>
+
+                <!-- Action Footer -->
+                <div class="p-3 bg-white flex items-center justify-between gap-2 border-t border-slate-100">
+                  <span class="text-xs font-semibold text-slate-500">Promoción &amp; Descuento</span>
+                  <button data-open-trade="dentist" data-tab="flyers" class="open-template-btn px-3 py-1.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-xs font-bold transition flex items-center gap-1 shadow-sm">
+                    <span>Editar Plantilla ➔</span>
+                  </button>
+                </div>
+              </div>
+            
+              <div class="group bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
+                <!-- Preview Header Card -->
+                <div class="p-3 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <div class="w-5 h-5 text-slate-700"><svg class="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.5 2 2 6.5 2 12c0 3.5 2.5 6.5 4 10 1.5-3.5 1-6.5 3-7 2-.5 2.5 2 3 2s1-2.5 3-2c2 .5 1.5 3.5 3 7 1.5-3.5 4-6.5 4-10 0-5.5-4.5-10-10-10z"></path></svg></div>
+                    <span class="text-xs font-bold text-slate-800">Clínica &amp; Laboratorio Dental</span>
+                  </div>
+                  <span class="text-[10px] bg-slate-200 font-bold px-2 py-0.5 rounded text-slate-600 uppercase">Flyer D</span>
+                </div>
+
+                <!-- Template Canvas Thumbnail -->
+                <div class="p-4 bg-slate-100 flex-1 flex items-center justify-center">
+                  <div class="flyer-card aspect-feed w-full rounded-xl p-4 flex flex-col justify-between shadow-md group-hover:scale-[1.02] transition-transform duration-300" style="background-color: #F0FDFA; color: #134E4A;">
+                    
+                <div class="border-b border-current/10 pb-1 mb-1">
+                  <h4 class="text-[4cqw] font-black">Clínica Dental Sonrisas</h4>
+                  <span class="text-[2cqw] opacity-60">Pasos de Servicio</span>
+                </div>
+                <div class="my-auto space-y-1 text-[2.4cqw]">
+                  <div class="flex gap-1.5 items-center"><span class="w-3 h-3 rounded-full text-white text-[1.8cqw] flex items-center justify-center font-bold" style="background:#0D9488">1</span><span>Cotización</span></div>
+                  <div class="flex gap-1.5 items-center"><span class="w-3 h-3 rounded-full text-white text-[1.8cqw] flex items-center justify-center font-bold" style="background:#0D9488">2</span><span>Evaluación</span></div>
+                  <div class="flex gap-1.5 items-center"><span class="w-3 h-3 rounded-full text-white text-[1.8cqw] flex items-center justify-center font-bold" style="background:#0D9488">3</span><span>Ejecución</span></div>
+                </div>
+                <div class="pt-1 border-t border-current/10 text-[2.4cqw] font-mono">55 1122 3344</div>
+              
+                  </div>
+                </div>
+
+                <!-- Action Footer -->
+                <div class="p-3 bg-white flex items-center justify-between gap-2 border-t border-slate-100">
+                  <span class="text-xs font-semibold text-slate-500">Proceso de Trabajo</span>
+                  <button data-open-trade="dentist" data-tab="flyers" class="open-template-btn px-3 py-1.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-xs font-bold transition flex items-center gap-1 shadow-sm">
+                    <span>Editar Plantilla ➔</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- VISTA 2: EDITOR / MESA DE TRABAJO (CANVAS EDITOR) -->
+    <!-- ========================================================================= -->
+    <div id="editorView" class="flex-col gap-6 flex">
+      
+      <!-- SUB-BAR / NAVIGATION & FORMAT OPTIONS -->
+      <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 flex flex-wrap items-center justify-between gap-4 no-print">
+        <!-- Tabs Nav -->
+        <div class="flex items-center gap-2 bg-slate-100 p-1 rounded-xl">
+          <button data-tab="flyers" class="tab-btn active px-4 py-1.5 rounded-lg font-bold text-xs sm:text-sm transition bg-white text-sky-600 shadow-sm">
+            📄 Flyers (4 Diseños)
+          </button>
+          <button data-tab="cards" class="tab-btn px-4 py-1.5 rounded-lg font-bold text-xs sm:text-sm transition text-slate-600 hover:text-slate-900">
+            🎴 Tarjetas Presentación
+          </button>
+          <button data-tab="data" class="tab-btn px-4 py-1.5 rounded-lg font-bold text-xs sm:text-sm transition text-slate-600 hover:text-slate-900">
+            ⚙️ Datos del Negocio
+          </button>
+        </div>
+
+        <!-- Current Selected Trade Badge & Change Button -->
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200">
+            <span class="text-xs font-semibold text-slate-500">Oficio Activo:</span>
+            <select id="tradeSelector" class="bg-transparent text-slate-900 font-extrabold text-xs sm:text-sm focus:outline-none cursor-pointer"><option value="bakery">Panadería &amp; Pastelería</option><option value="florist">Florería &amp; Botánica</option><option value="plumber">Plomería &amp; Fontanería</option><option value="electrician">Electricista &amp; Automatización</option><option value="mason">Albañilería &amp; Construcción</option><option value="dentist">Clínica &amp; Laboratorio Dental</option><option value="carpenter">Carpintería &amp; Ebanistería</option><option value="mechanic">Taller Mecánico Automotriz</option></select>
+          </div>
+
+          <!-- Format Toggle & Color Theme -->
+          <div id="aspectRatioGroup" class="flex items-center bg-slate-100 p-1 rounded-xl">
+            <button id="btnAspectFeed" class="px-3 py-1 rounded-lg text-xs font-bold transition bg-white text-slate-800 shadow-sm">
+              4:5
+            </button>
+            <button id="btnAspectStory" class="px-3 py-1 rounded-lg text-xs font-bold transition text-slate-600 hover:text-slate-900">
+              9:16
+            </button>
+          </div>
+
+          <!-- Paleta de Color rápida -->
+          <div class="flex items-center gap-1.5 border-l border-slate-200 pl-3">
+            <select id="colorPaletteSelect" class="bg-slate-50 border border-slate-300 text-xs font-semibold rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-sky-500">
+              <option value="default">Color por Defecto</option>
+              <option value="warm">Cálido / Dorado</option>
+              <option value="floral">Rosa Floral</option>
+              <option value="industrial">Industrial</option>
+              <option value="electric">Azul Neón</option>
+              <option value="navy">Navy Elegante</option>
+              <option value="emerald">Verde Esmeralda</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECCIÓN DE FORMULARIO DE DATOS (COLLAPSIBLE / TAB-CONTENT) -->
+      <section id="dataSection" class="hidden no-print">
+        <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6">
+          <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+            <div>
+              <h2 class="text-lg font-bold text-slate-900">Formulario Reactivo de Datos</h2>
+              <p class="text-xs text-slate-500">Modifica la información general de tu negocio para actualizar instantáneamente las plantillas.</p>
+            </div>
+            <span id="activeTradeBadge" class="px-3 py-1 bg-sky-100 text-sky-800 text-xs font-bold rounded-full uppercase tracking-wider">Clínica &amp; Laboratorio Dental</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-xs font-semibold text-slate-700">
+            <div>
+              <label class="block mb-1">Nombre Comercial</label>
+              <input type="text" id="f_businessName" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block mb-1">Titular / Especialidad</label>
+              <input type="text" id="f_ownerName" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block mb-1">Teléfono / WhatsApp</label>
+              <input type="text" id="f_phone" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block mb-1">Ciudad / Cobertura</label>
+              <input type="text" id="f_location" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block mb-1">Horario de Atención</label>
+              <input type="text" id="f_hours" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block mb-1">Descuento / Promo (%)</label>
+              <input type="text" id="f_discount" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block mb-1">Servicio en Promoción</label>
+              <input type="text" id="f_promoItem" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block mb-1">Vigencia Promo</label>
+              <input type="text" id="f_promoValidity" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+            </div>
+            <div class="md:col-span-2">
+              <label class="block mb-1">Eslogan / Mensaje Destacado</label>
+              <input type="text" id="f_slogan" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+            </div>
+            <div class="md:col-span-2">
+              <label class="block mb-1">Novedad o Anuncio Importante</label>
+              <input type="text" id="f_news" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+            </div>
+            <div class="md:col-span-4">
+              <label class="block mb-1">Lista de Servicios y Precios <span class="text-slate-400 font-normal">(Formato: Servicio | Precio por línea)</span></label>
+              <textarea id="f_services" rows="4" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none font-mono text-xs"></textarea>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECCIÓN FLYERS CANVAS (4 ESTILOS VARIADOS POR OFICIO) -->
+      <section id="flyersSection" class="tab-content print-area">
+        <div class="mb-4 flex items-center justify-between no-print">
+          <div>
+            <h2 class="text-xl font-extrabold text-slate-900">Mesa de Trabajo: Flyers Interactivos</h2>
+            <p class="text-xs text-slate-500">Puedes editar los textos directamente sobre las plantillas activando "Editar en Canvas".</p>
+          </div>
+          <button id="resetBtn" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-red-600 hover:bg-red-50 transition border border-slate-200 bg-white">
+            Restablecer Valores
+          </button>
+        </div>
+
+        <!-- GRID DE FLYERS -->
+        <div id="flyersGrid" class="flyer-grid grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+          <div class="flyer-card aspect-feed rounded-2xl overflow-hidden p-6 flex flex-col justify-between border border-slate-200/50" style="background-color: #F0FDFA; color: #134E4A;">
+            <div class="flex items-center justify-between border-b pb-4 border-current/10">
+              <div class="w-10 h-10 p-2 rounded-xl" style="background-color: #CCFBF1; color: #0D9488">
+                <svg class="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.5 2 2 6.5 2 12c0 3.5 2.5 6.5 4 10 1.5-3.5 1-6.5 3-7 2-.5 2.5 2 3 2s1-2.5 3-2c2 .5 1.5 3.5 3 7 1.5-3.5 4-6.5 4-10 0-5.5-4.5-10-10-10z"></path></svg>
+              </div>
+              <span class="text-[10cqw] font-black tracking-tighter opacity-15 uppercase">dentist</span>
+            </div>
+            
+            <div class="my-auto py-4">
+              <span class="text-[3.2cqw] font-bold uppercase tracking-widest block mb-1 opacity-80" style="color: #0D9488" data-key="ownerName">Dra. Marisol Hdz - Cirujano Dentista</span>
+              <h2 class="text-[8.5cqw] font-black leading-[0.95] tracking-tight mb-3" data-key="businessName">Clínica Dental Sonrisas</h2>
+              <p class="text-[3.8cqw] font-medium leading-relaxed opacity-90 mb-4" data-key="slogan">Cuidamos la salud estética y funcional de tu sonrisa.</p>
+              
+              <div class="flex flex-wrap gap-1.5 mt-2">
+                
+                  <span class="text-[2.8cqw] font-bold px-3 py-1 rounded-full border border-current/20">Limpieza Dental Profunda Ultrasonido</span>
+                
+                  <span class="text-[2.8cqw] font-bold px-3 py-1 rounded-full border border-current/20">Resina Dental Estética</span>
+                
+                  <span class="text-[2.8cqw] font-bold px-3 py-1 rounded-full border border-current/20">Corona de Zirconia Monolítica</span>
+                
+                  <span class="text-[2.8cqw] font-bold px-3 py-1 rounded-full border border-current/20">Tratamiento de Endodoncia</span>
+                
+              </div>
+            </div>
+
+            <div class="pt-4 border-t border-current/10 flex items-center justify-between gap-2">
+              <div>
+                <p class="text-[2.8cqw] font-bold uppercase opacity-75">Contacto &amp; Citas</p>
+                <p class="text-[4cqw] font-black font-mono" data-key="phone">55 1122 3344</p>
+              </div>
+              <div class="text-right">
+                <p class="text-[2.8cqw] font-bold opacity-75" data-key="location">Consultorio Médico Central</p>
+                <p class="text-[2.5cqw] opacity-60" data-key="hours">Lun a Vie 9:00 AM - 7:00 PM</p>
+              </div>
+            </div>
+          </div>
+        
+          <div class="flyer-card aspect-feed rounded-2xl overflow-hidden p-6 flex flex-col justify-between border border-slate-200/50" style="background-color: #F0FDFA; color: #134E4A;">
+            <div>
+              <div class="text-center pb-4 border-b border-current/10">
+                <h3 class="text-[3.2cqw] font-bold uppercase tracking-widest opacity-75" data-key="businessName">Clínica Dental Sonrisas</h3>
+                <h2 class="text-[7cqw] font-black tracking-tight" style="color: #0D9488">Servicios &amp; Precios</h2>
+              </div>
+              
+              <div class="mt-4 flex flex-col gap-2.5">
+                
+                  <div class="flex items-baseline justify-between text-[3.4cqw] gap-2">
+                    <span class="font-semibold">Limpieza Dental Profunda Ultrasonido</span>
+                    <span class="flex-1 border-b border-dotted border-current/30 mx-1"></span>
+                    <span class="font-extrabold font-mono" style="color: #0D9488">$$450</span>
+                  </div>
+                
+                  <div class="flex items-baseline justify-between text-[3.4cqw] gap-2">
+                    <span class="font-semibold">Resina Dental Estética</span>
+                    <span class="flex-1 border-b border-dotted border-current/30 mx-1"></span>
+                    <span class="font-extrabold font-mono" style="color: #0D9488">$$550</span>
+                  </div>
+                
+                  <div class="flex items-baseline justify-between text-[3.4cqw] gap-2">
+                    <span class="font-semibold">Corona de Zirconia Monolítica</span>
+                    <span class="flex-1 border-b border-dotted border-current/30 mx-1"></span>
+                    <span class="font-extrabold font-mono" style="color: #0D9488">$$1,800</span>
+                  </div>
+                
+                  <div class="flex items-baseline justify-between text-[3.4cqw] gap-2">
+                    <span class="font-semibold">Tratamiento de Endodoncia</span>
+                    <span class="flex-1 border-b border-dotted border-current/30 mx-1"></span>
+                    <span class="font-extrabold font-mono" style="color: #0D9488">$$1,600</span>
+                  </div>
+                
+                  <div class="flex items-baseline justify-between text-[3.4cqw] gap-2">
+                    <span class="font-semibold">Blanqueamiento Laser LED</span>
+                    <span class="flex-1 border-b border-dotted border-current/30 mx-1"></span>
+                    <span class="font-extrabold font-mono" style="color: #0D9488">$$1,200</span>
+                  </div>
+                
+              </div>
+            </div>
+
+            <div class="mt-auto pt-4 border-t border-current/10 bg-current/5 -mx-6 -mb-6 p-6 flex items-center justify-between">
+              <div>
+                <span class="text-[2.6cqw] font-bold uppercase tracking-wider block opacity-70">Agenda por WhatsApp</span>
+                <span class="text-[4.5cqw] font-black font-mono" data-key="phone">55 1122 3344</span>
+              </div>
+              <div class="w-8 h-8 p-1.5 rounded-lg" style="background-color: #0D9488; color: white">
+                <svg class="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.5 2 2 6.5 2 12c0 3.5 2.5 6.5 4 10 1.5-3.5 1-6.5 3-7 2-.5 2.5 2 3 2s1-2.5 3-2c2 .5 1.5 3.5 3 7 1.5-3.5 4-6.5 4-10 0-5.5-4.5-10-10-10z"></path></svg>
+              </div>
+            </div>
+          </div>
+        
+          <div class="flyer-card aspect-feed rounded-2xl overflow-hidden p-6 flex flex-col justify-between border border-slate-200/50 relative" style="background-color: #F0FDFA; color: #134E4A;">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="px-2.5 py-1 rounded-md text-[2.8cqw] font-black uppercase tracking-wider text-white" style="background-color: #0D9488">¡Oferta Especial!</span>
+                <h3 class="text-[4cqw] font-extrabold mt-2" data-key="businessName">Clínica Dental Sonrisas</h3>
+              </div>
+              <div class="w-10 h-10 p-2 rounded-xl" style="background-color: #CCFBF1; color: #0D9488">
+                <svg class="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.5 2 2 6.5 2 12c0 3.5 2.5 6.5 4 10 1.5-3.5 1-6.5 3-7 2-.5 2.5 2 3 2s1-2.5 3-2c2 .5 1.5 3.5 3 7 1.5-3.5 4-6.5 4-10 0-5.5-4.5-10-10-10z"></path></svg>
+              </div>
+            </div>
+
+            <div class="my-auto text-center py-2">
+              <div class="inline-block text-[22cqw] font-black leading-none tracking-tighter" style="color: #0D9488">
+                -<span data-key="discount">25</span>%
+              </div>
+              <h2 class="text-[6.5cqw] font-black leading-tight uppercase tracking-tight" data-key="promoItem">
+                En Limpieza Ultrasonido y Blanqueamiento
+              </h2>
+              <p class="text-[3.2cqw] font-bold opacity-75 mt-2" data-key="promoValidity">Válido agenda previa</p>
+            </div>
+
+            <div class="p-4 rounded-xl border border-current/15 text-center bg-current/5">
+              <p class="text-[3cqw] font-bold uppercase tracking-wider opacity-80">Menciona este flyer al llamar</p>
+              <p class="text-[5cqw] font-black font-mono mt-0.5" data-key="phone">55 1122 3344</p>
+            </div>
+          </div>
+        
+          <div class="flyer-card aspect-feed rounded-2xl overflow-hidden p-6 flex flex-col justify-between border border-slate-200/50" style="background-color: #F0FDFA; color: #134E4A;">
+            <div class="border-b pb-3 border-current/10">
+              <span class="text-[2.8cqw] font-bold uppercase tracking-widest opacity-70 block">¿Cómo trabajamos?</span>
+              <h2 class="text-[6.5cqw] font-black leading-tight" data-key="businessName">Clínica Dental Sonrisas</h2>
+            </div>
+
+            <div class="my-auto flex flex-col gap-3 py-2">
+              <div class="flex items-start gap-3">
+                <span class="w-7 h-7 rounded-full flex items-center justify-center font-black text-[3.2cqw] text-white shrink-0" style="background-color: #0D9488">1</span>
+                <div>
+                  <h4 class="text-[3.5cqw] font-bold leading-snug">Contacto &amp; Cotización</h4>
+                  <p class="text-[2.8cqw] opacity-75">Envíanos un mensaje con tu solicitud o idea.</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3">
+                <span class="w-7 h-7 rounded-full flex items-center justify-center font-black text-[3.2cqw] text-white shrink-0" style="background-color: #0D9488">2</span>
+                <div>
+                  <h4 class="text-[3.5cqw] font-bold leading-snug">Evaluación o Visita</h4>
+                  <p class="text-[2.8cqw] opacity-75">Revisamos requerimientos en Consultorio Médico Central.</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3">
+                <span class="w-7 h-7 rounded-full flex items-center justify-center font-black text-[3.2cqw] text-white shrink-0" style="background-color: #0D9488">3</span>
+                <div>
+                  <h4 class="text-[3.5cqw] font-bold leading-snug">Ejecución Profesional</h4>
+                  <p class="text-[2.8cqw] opacity-75">Realizamos el trabajo con garantía de calidad.</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3">
+                <span class="w-7 h-7 rounded-full flex items-center justify-center font-black text-[3.2cqw] text-white shrink-0" style="background-color: #0D9488">4</span>
+                <div>
+                  <h4 class="text-[3.5cqw] font-bold leading-snug">Entrega &amp; Satisfacción</h4>
+                  <p class="text-[2.8cqw] opacity-75">Garantía respaldada por Dra. Marisol Hdz - Cirujano Dentista.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-3 border-t border-current/10 flex items-center justify-between">
+              <span class="text-[3.2cqw] font-black font-mono" data-key="phone">55 1122 3344</span>
+              <span class="text-[2.6cqw] font-bold opacity-75" data-key="hours">Lun a Vie 9:00 AM - 7:00 PM</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECCIÓN TARJETAS DE PRESENTACIÓN (FRENTE Y VUELTA CON QR DINÁMICO) -->
+      <section id="cardsSection" class="tab-content hidden print-area">
+        <div class="mb-4 no-print">
+          <h2 class="text-xl font-extrabold text-slate-900">Tarjetas de Presentación (Frente y Reverso)</h2>
+          <p class="text-xs text-slate-500">Estándar 9x5 cm adaptables con código QR directo a WhatsApp.</p>
+        </div>
+
+        <div id="cardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="flex flex-col gap-3">
+            <h3 class="text-xs font-extrabold text-slate-500 uppercase tracking-wider">Estilo 1: Profesional / Corporativo</h3>
+            <div class="flyer-card aspect-[9/5] rounded-xl p-5 flex flex-col justify-between border border-slate-200" style="background-color: #F0FDFA; color: #134E4A;">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h4 class="text-[5cqw] font-black leading-tight" data-key="businessName">Clínica Dental Sonrisas</h4>
+                  <p class="text-[3cqw] font-semibold opacity-75" style="color: #0D9488" data-key="ownerName">Dra. Marisol Hdz - Cirujano Dentista</p>
+                </div>
+                <div class="w-7 h-7 p-1 rounded-md" style="background-color: #CCFBF1; color: #0D9488">
+                  <svg class="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.5 2 2 6.5 2 12c0 3.5 2.5 6.5 4 10 1.5-3.5 1-6.5 3-7 2-.5 2.5 2 3 2s1-2.5 3-2c2 .5 1.5 3.5 3 7 1.5-3.5 4-6.5 4-10 0-5.5-4.5-10-10-10z"></path></svg>
+                </div>
+              </div>
+              <div class="text-[2.8cqw] font-mono space-y-0.5">
+                <p class="font-bold">WhatsApp: 55 1122 3344</p>
+                <p class="opacity-75">Consultorio Médico Central</p>
+              </div>
+            </div>
+            <div class="flyer-card aspect-[9/5] rounded-xl p-5 flex items-center justify-between border border-slate-200" style="background-color: #134E4A; color: #F0FDFA">
+              <div class="space-y-1 max-w-[65%]">
+                <p class="text-[2.8cqw] font-bold uppercase tracking-wider opacity-60">Nuestros Servicios</p>
+                <p class="text-[2.8cqw] font-medium leading-snug opacity-90">Limpieza Dental Profunda Ultrasonido • Resina Dental Estética • Corona de Zirconia Monolítica</p>
+              </div>
+              <div class="w-14 h-14 p-2 rounded-lg bg-white text-slate-900 flex flex-col items-center justify-center text-center">
+                
+          <svg class="w-full h-full" viewBox="0 0 24 24" fill="currentColor">
+            <rect x="2" y="2" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"></rect>
+            <rect x="4" y="4" width="4" height="4" fill="currentColor"></rect>
+            <rect x="14" y="2" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"></rect>
+            <rect x="16" y="4" width="4" height="4" fill="currentColor"></rect>
+            <rect x="2" y="14" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"></rect>
+            <rect x="4" y="16" width="4" height="4" fill="currentColor"></rect>
+            <rect x="14" y="14" width="3" height="3" fill="currentColor"></rect>
+            <rect x="18" y="14" width="4" height="3" fill="currentColor"></rect>
+            <rect x="14" y="18" width="4" height="4" fill="currentColor"></rect>
+            <rect x="19" y="19" width="3" height="3" fill="currentColor"></rect>
+          </svg>
+        
+                <span class="text-[1.8cqw] font-bold mt-1 uppercase">Escanear</span>
+              </div>
+            </div>
+          </div>
+        
+          <div class="flex flex-col gap-3">
+            <h3 class="text-xs font-extrabold text-slate-500 uppercase tracking-wider">Estilo 2: Minimalista Limpio</h3>
+            <div class="flyer-card aspect-[9/5] rounded-xl p-6 flex flex-col justify-center items-center text-center border border-slate-200" style="background-color: #F0FDFA; color: #134E4A;">
+              <div class="w-8 h-8 p-1.5 rounded-full mb-2" style="background-color: #0D9488; color: white">
+                <svg class="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.5 2 2 6.5 2 12c0 3.5 2.5 6.5 4 10 1.5-3.5 1-6.5 3-7 2-.5 2.5 2 3 2s1-2.5 3-2c2 .5 1.5 3.5 3 7 1.5-3.5 4-6.5 4-10 0-5.5-4.5-10-10-10z"></path></svg>
+              </div>
+              <h4 class="text-[5.5cqw] font-black tracking-tight" data-key="businessName">Clínica Dental Sonrisas</h4>
+              <p class="text-[2.8cqw] font-medium opacity-70 mt-1" data-key="slogan">Cuidamos la salud estética y funcional de tu sonrisa.</p>
+            </div>
+            <div class="flyer-card aspect-[9/5] rounded-xl p-5 flex flex-col justify-between border border-slate-200" style="background-color: #F0FDFA; color: #134E4A;">
+              <div class="flex items-center justify-between">
+                <span class="text-[2.8cqw] font-bold uppercase opacity-60">Citas &amp; Consultas</span>
+                <span class="text-[3.2cqw] font-black font-mono" style="color: #0D9488" data-key="phone">55 1122 3344</span>
+              </div>
+              <div class="text-[2.6cqw] opacity-80 border-t border-current/10 pt-2">
+                <p class="font-bold" data-key="ownerName">Dra. Marisol Hdz - Cirujano Dentista</p>
+                <p>Consultorio Médico Central — Lun a Vie 9:00 AM - 7:00 PM</p>
+              </div>
+            </div>
+          </div>
+        
+          <div class="flex flex-col gap-3">
+            <h3 class="text-xs font-extrabold text-slate-500 uppercase tracking-wider">Estilo 3: QR Directo a WhatsApp</h3>
+            <div class="flyer-card aspect-[9/5] rounded-xl p-5 flex items-center gap-4 border border-slate-200" style="background-color: #F0FDFA; color: #134E4A;">
+              <div class="w-16 h-16 p-2 rounded-xl bg-white text-slate-900 border border-slate-200 shrink-0 flex flex-col items-center justify-center">
+                
+          <svg class="w-full h-full" viewBox="0 0 24 24" fill="currentColor">
+            <rect x="2" y="2" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"></rect>
+            <rect x="4" y="4" width="4" height="4" fill="currentColor"></rect>
+            <rect x="14" y="2" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"></rect>
+            <rect x="16" y="4" width="4" height="4" fill="currentColor"></rect>
+            <rect x="2" y="14" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"></rect>
+            <rect x="4" y="16" width="4" height="4" fill="currentColor"></rect>
+            <rect x="14" y="14" width="3" height="3" fill="currentColor"></rect>
+            <rect x="18" y="14" width="4" height="3" fill="currentColor"></rect>
+            <rect x="14" y="18" width="4" height="4" fill="currentColor"></rect>
+            <rect x="19" y="19" width="3" height="3" fill="currentColor"></rect>
+          </svg>
+        
+              </div>
+              <div>
+                <h4 class="text-[4.8cqw] font-black leading-tight" data-key="businessName">Clínica Dental Sonrisas</h4>
+                <p class="text-[2.8cqw] font-mono font-bold mt-1" style="color: #0D9488" data-key="phone">55 1122 3344</p>
+                <p class="text-[2.4cqw] opacity-75 mt-0.5" data-key="hours">Lun a Vie 9:00 AM - 7:00 PM</p>
+              </div>
+            </div>
+            <div class="flyer-card aspect-[9/5] rounded-xl p-5 flex flex-col justify-between border border-slate-200" style="background-color: #0D9488; color: white">
+              <div class="flex justify-between items-center">
+                <span class="text-[3cqw] font-black uppercase tracking-wider">Servicio Garantizado</span>
+                <div class="w-6 h-6"><svg class="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.5 2 2 6.5 2 12c0 3.5 2.5 6.5 4 10 1.5-3.5 1-6.5 3-7 2-.5 2.5 2 3 2s1-2.5 3-2c2 .5 1.5 3.5 3 7 1.5-3.5 4-6.5 4-10 0-5.5-4.5-10-10-10z"></path></svg></div>
+              </div>
+              <p class="text-[3.5cqw] font-bold leading-tight" data-key="news">Aceptamos escaneos digitales y radiografías en 3D.</p>
+              <p class="text-[2.5cqw] opacity-80 font-mono" data-key="location">Consultorio Médico Central</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="mt-auto bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500 no-print">
+    <div class="max-w-7xl mx-auto px-4">
+      <p class="font-semibold text-slate-700">FlyerCraft Studio — Catálogo &amp; Creador de Plantillas Profesionales</p>
+      <p class="mt-1">Panadería, Florería, Plomería, Electricista, Albañil, Dentista, Carpintero, Mecánico y más.</p>
+    </div>
+  </footer>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-white text-xs font-bold px-4 py-3 rounded-xl shadow-2xl transition-all duration-300 z-50 transform opacity-0 pointer-events-none translate-y-2">Cargada plantilla de Clínica &amp; Laboratorio Dental</div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    (function () {
+      'use strict';
+
+      // Base de Datos de Oficios
+      const TRADES_DATA = {
+        bakery: {
+          name: 'Panadería & Pastelería',
+          icon: `<svg class="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1.5 1.5-1.5 1.5 1.5 2.5 1.5 1.5-1.5 2.5-1.5 1.5 1.5 2.5 1.5 1.5-1.5 2.5-1.5"/><path d="M2 21h20"/><path d="M7 8v2"/><path d="M12 8v2"/><path d="M17 8v2"/><path d="M7 4h10a2 2 0 0 1 2 2v2H5V6a2 2 0 0 1 2-2z"/></svg>`,
+          colors: { bg: '#FFFDF9', text: '#3E2723', accent: '#D84315', cardBg: '#FBE9E7' },
+          defaults: {
+            businessName: 'Panadería La Artesana',
+            ownerName: 'Maestro Panadero Carlos',
+            phone: '55 1234 5678',
+            location: 'Centro Histórico & A domicilio',
+            hours: 'Lun a Sáb 6:00 AM - 9:00 PM',
+            discount: '20',
+            promoItem: 'Pasteles de Cumpleaños',
+            promoValidity: 'Válido este mes de Noviembre',
+            slogan: 'El sabor tradicional recién horneado cada mañana.',
+            news: '¡Ya aceptamos pedidos de pan dulce por WhatsApp!',
+            services: `Pan Dulce Tradicional (Pieza) | $12\nPastel Artesanal de Tres Leches | $350\nBaguette Crujiente Recién Hecho | $25\nEmpanadas Dulces y Saladas (6 pzas) | $90\nGalletas de Mantequilla (Caja) | $120`
+          }
+        },
+        florist: {
+          name: 'Florería & Botánica',
+          icon: `<svg class="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7a5 5 0 1 0 0-10 5 5 0 0 0 0 10z"/><path d="M12 7v14"/><path d="M12 15c-3.5 0-6-2.5-6-5.5 3.5 0 6 2.5 6 5.5z"/><path d="M12 18c3.5 0 6-2.5 6-5.5-3.5 0-6 2.5-6 5.5z"/></svg>`,
+          colors: { bg: '#FDFBF7', text: '#1B4332', accent: '#D81B60', cardBg: '#FCE4EC' },
+          defaults: {
+            businessName: 'Florería Rosas & Menta',
+            ownerName: 'Diseño Floral Profesional',
+            phone: '55 9876 5432',
+            location: 'Zona Metropolitana & Envíos Express',
+            hours: 'Lun a Dom 8:00 AM - 8:00 PM',
+            discount: '15',
+            promoItem: 'Ramos de Rosas Importadas',
+            promoValidity: 'Hasta agotar existencias',
+            slogan: 'Expresa tus emociones con la belleza del arte floral.',
+            news: 'Entregas en menos de 2 horas en zona centro.',
+            services: `Ramo de 24 Rosas Rojas Premium | $480\nArreglo Floral para Aniversario | $650\nPlanta Decorativa en Maceta de Cerámica | $290\nDecoración Floral para Eventos | $1,800\nBouquet de Girasoles Silvestres | $380`
+          }
+        },
+        plumber: {
+          name: 'Plomería & Fontanería',
+          icon: `<svg class="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`,
+          colors: { bg: '#F0F9FF', text: '#0C4A6E', accent: '#0284C7', cardBg: '#E0F2FE' },
+          defaults: {
+            businessName: 'Plomería Express 24/7',
+            ownerName: 'Técnico Certificado Juan',
+            phone: '55 3333 2222',
+            location: 'Servicio a Domicilio Inmediato',
+            hours: 'Atención 24 Horas / 7 Días',
+            discount: '10',
+            promoItem: 'Mantenimiento de Boilers y Calentadores',
+            promoValidity: 'Promoción de temporada de frío',
+            slogan: 'Soluciones rápidas y garantizadas sin romper de más.',
+            news: '¡Atención de emergencias nocturnas y fuga de gas!',
+            services: `Reparación de Fuga de Agua o Gas | $350\nInstalación de Calentador / Boiler | $750\nDestape de Drenaje y Tubos | $500\nInstalación de Juego de Baño completo | $1,200\nMantenimiento Preventivo Fuga | $400`
+          }
+        },
+        electrician: {
+          name: 'Electricista & Automatización',
+          icon: `<svg class="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+          colors: { bg: '#FAF5FF', text: '#3B0764', accent: '#9333EA', cardBg: '#F3E8FF' },
+          defaults: {
+            businessName: 'Voltio Servicios Eléctricos',
+            ownerName: 'Ing. Electricista Roberto',
+            phone: '55 4444 8888',
+            location: 'Toda la Ciudad y Residencial',
+            hours: 'Lun a Sáb 7:00 AM - 7:00 PM',
+            discount: '15',
+            promoItem: 'Actualización a Iluminación LED',
+            promoValidity: 'Válido todo el mes',
+            slogan: 'Seguridad y eficiencia eléctrica para tu hogar y negocio.',
+            news: 'Diagnosticamos cortos circuitos con escáner térmico.',
+            services: `Instalación de Centro de Cargas | $850\nDiagnóstico de Corto Circuito | $400\nInstalación de Lámparas y Ventiladores | $250\nCableado Eléctrico Completo por Habitación | $950\nInstalación de Balanceo de Cargas | $1,100`
+          }
+        },
+        mason: {
+          name: 'Albañilería & Construcción',
+          icon: `<svg class="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
+          colors: { bg: '#FAF8F5', text: '#292524', accent: '#EA580C', cardBg: '#FFEDD5' },
+          defaults: {
+            businessName: 'Construcciones & Acabados Roca',
+            ownerName: 'Maestro Albañil Don Pedro',
+            phone: '55 6666 7777',
+            location: 'Obras en Ciudad y Alrededores',
+            hours: 'Lun a Sáb 7:00 AM - 6:00 PM',
+            discount: '10',
+            promoItem: 'Mano de Obra en Remodelación de Baños',
+            promoValidity: 'Presupuestos gratis esta semana',
+            slogan: 'Construcción firme, firmeza y acabados de primera.',
+            news: 'Realizamos levantamiento de muros, losas y colocación de piso.',
+            services: `Colocación de Piso Cerámico (m²) | $140\nAplanado y Empaste de Paredes (m²) | $95\nRemodelación Completa de Baño | $4,500\nConstrucción de Muro de Tabique (m²) | $220\nImpermeabilización de Azoteas (m²) | $85`
+          }
+        },
+        dentist: {
+          name: 'Clínica & Laboratorio Dental',
+          icon: `<svg class="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.5 2 2 6.5 2 12c0 3.5 2.5 6.5 4 10 1.5-3.5 1-6.5 3-7 2-.5 2.5 2 3 2s1-2.5 3-2c2 .5 1.5 3.5 3 7 1.5-3.5 4-6.5 4-10 0-5.5-4.5-10-10-10z"/></svg>`,
+          colors: { bg: '#F0FDFA', text: '#134E4A', accent: '#0D9488', cardBg: '#CCFBF1' },
+          defaults: {
+            businessName: 'Clínica Dental Sonrisas',
+            ownerName: 'Dra. Marisol Hdz - Cirujano Dentista',
+            phone: '55 1122 3344',
+            location: 'Consultorio Médico Central',
+            hours: 'Lun a Vie 9:00 AM - 7:00 PM',
+            discount: '25',
+            promoItem: 'Limpieza Ultrasonido y Blanqueamiento',
+            promoValidity: 'Válido agenda previa',
+            slogan: 'Cuidamos la salud estética y funcional de tu sonrisa.',
+            news: 'Aceptamos escaneos digitales y radiografías en 3D.',
+            services: `Limpieza Dental Profunda Ultrasonido | $450\nResina Dental Estética | $550\nCorona de Zirconia Monolítica | $1,800\nTratamiento de Endodoncia | $1,600\nBlanqueamiento Laser LED | $1,200`
+          }
+        },
+        carpenter: {
+          name: 'Carpintería & Ebanistería',
+          icon: `<svg class="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 16V8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><rect x="2" y="16" width="20" height="4" rx="1"/></svg>`,
+          colors: { bg: '#FEFCE8', text: '#713F12', accent: '#CA8A04', cardBg: '#FEF08A' },
+          defaults: {
+            businessName: 'Carpintería El Roble',
+            ownerName: 'Diseño en Madera Fernando',
+            phone: '55 8899 0011',
+            location: 'Fabricación a Medida & Instalación',
+            hours: 'Lun a Sáb 8:00 AM - 6:00 PM',
+            discount: '15',
+            promoItem: 'Cocinas Integrales sobre medida',
+            promoValidity: 'Aprovecha este mes',
+            slogan: 'Muebles únicos con maderas seleccionadas y durabilidad garantizada.',
+            news: 'Diseño en 3D previo a la fabricación de closets y cocinas.',
+            services: `Fabricación de Closet sobre Medida | $6,500\nRestauración y Barnizado de Comedor | $1,400\nPuerta Principal de Madera Sólida | $3,200\nCocina Integral Modulada (metro lin) | $4,800\nFabricación de Librero Minimalista | $2,100`
+          }
+        },
+        mechanic: {
+          name: 'Taller Mecánico Automotriz',
+          icon: `<svg class="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>`,
+          colors: { bg: '#F8FAFC', text: '#0F172A', accent: '#DC2626', cardBg: '#F1F5F9' },
+          defaults: {
+            businessName: 'Taller Mecánico Serviauto',
+            ownerName: 'Mecánica General y Escáner',
+            phone: '55 7788 9900',
+            location: 'Taller Central & Auxilio Vial',
+            hours: 'Lun a Sáb 8:00 AM - 7:00 PM',
+            discount: '20',
+            promoItem: 'Afinación Mayor Multinivel',
+            promoValidity: 'Válido para todas las marcas',
+            slogan: 'Diagnóstico acertado y refacciones de calidad para tu vehículo.',
+            news: 'Servicio de escáner computarizado gratuito en tu afinación.',
+            services: `Afinación Mayor (4 y 6 Cilindros) | $1,200\nCambio de Aceite Sintético y Filtro | $650\nServicio de Frenos (Balatas e Inspección) | $550\nDiagnóstico con Escáner Computarizado | $300\nSuspensión y Dirección Checklist | $400`
+          }
+        }
+      };
+
+      const PALETTES = {
+        default: null,
+        warm: { bg: '#FFFBF0', text: '#422006', accent: '#D97706', cardBg: '#FEF3C7' },
+        floral: { bg: '#FDF2F8', text: '#831843', accent: '#DB2777', cardBg: '#FCE7F3' },
+        industrial: { bg: '#18181B', text: '#FAFAFA', accent: '#EAB308', cardBg: '#27272A' },
+        electric: { bg: '#0F172A', text: '#F8FAFC', accent: '#38BDF8', cardBg: '#1E293B' },
+        navy: { bg: '#0F172A', text: '#F8FAFC', accent: '#0EA5E9', cardBg: '#1E293B' },
+        emerald: { bg: '#F0FDF4', text: '#14532D', accent: '#16A34A', cardBg: '#DCFCE7' }
+      };
+
+      // Estado Global
+      let currentTrade = 'bakery';
+      let currentData = {};
+      let isEditingMode = false;
+      let activeTab = 'flyers';
+      let activeAspect = 'aspect-feed';
+      let galAspect = 'aspect-feed';
+      let activePalette = 'default';
+      let currentFilterTrade = 'all';
+
+      // Referencias DOM
+      const galleryView = document.getElementById('galleryView');
+      const editorView = document.getElementById('editorView');
+      const galleryGrid = document.getElementById('galleryGrid');
+      const tradeFilterContainer = document.getElementById('tradeFilterContainer');
+      const galleryCountBadge = document.getElementById('galleryCountBadge');
+      const galleryTitleText = document.getElementById('galleryTitleText');
+      const viewGalleryBtn = document.getElementById('viewGalleryBtn');
+      const viewEditorBtn = document.getElementById('viewEditorBtn');
+      const brandLogoBtn = document.getElementById('brandLogoBtn');
+      
+      const tradeSelector = document.getElementById('tradeSelector');
+      const toggleEditBtn = document.getElementById('toggleEditBtn');
+      const resetBtn = document.getElementById('resetBtn');
+      const printBtn = document.getElementById('printBtn');
+      const downloadHtmlBtn = document.getElementById('downloadHtmlBtn');
+      const flyersGrid = document.getElementById('flyersGrid');
+      const cardsGrid = document.getElementById('cardsGrid');
+      const dataSection = document.getElementById('dataSection');
+      const flyersSection = document.getElementById('flyersSection');
+      const cardsSection = document.getElementById('cardsSection');
+      const activeTradeBadge = document.getElementById('activeTradeBadge');
+      const toast = document.getElementById('toast');
+      const btnAspectFeed = document.getElementById('btnAspectFeed');
+      const btnAspectStory = document.getElementById('btnAspectStory');
+      const galAspectFeed = document.getElementById('galAspectFeed');
+      const galAspectStory = document.getElementById('galAspectStory');
+      const colorPaletteSelect = document.getElementById('colorPaletteSelect');
+
+      function init() {
+        populateTradeSelector();
+        buildGalleryFilters();
+        loadTrade(currentTrade);
+        renderGallery();
+        setupEventListeners();
+      }
+
+      function populateTradeSelector() {
+        tradeSelector.innerHTML = Object.keys(TRADES_DATA).map(key => {
+          return `<option value="${key}">${TRADES_DATA[key].name}</option>`;
+        }).join('');
+        tradeSelector.value = currentTrade;
+      }
+
+      function buildGalleryFilters() {
+        let html = `
+          <button data-filter="all" class="trade-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition bg-sky-500 text-white shadow-sm">
+            Todos los Oficios
+          </button>
+        `;
+        Object.keys(TRADES_DATA).forEach(key => {
+          html += `
+            <button data-filter="${key}" class="trade-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white border border-slate-700">
+              ${TRADES_DATA[key].name}
+            </button>
+          `;
+        });
+        tradeFilterContainer.innerHTML = html;
+      }
+
+      function loadTrade(tradeKey) {
+        currentTrade = tradeKey;
+        tradeSelector.value = tradeKey;
+        const trade = TRADES_DATA[tradeKey];
+        currentData = { ...trade.defaults };
+        activeTradeBadge.textContent = trade.name;
+        
+        fillFormData();
+        renderAll();
+      }
+
+      function fillFormData() {
+        document.getElementById('f_businessName').value = currentData.businessName;
+        document.getElementById('f_ownerName').value = currentData.ownerName;
+        document.getElementById('f_phone').value = currentData.phone;
+        document.getElementById('f_location').value = currentData.location;
+        document.getElementById('f_hours').value = currentData.hours;
+        document.getElementById('f_discount').value = currentData.discount;
+        document.getElementById('f_promoItem').value = currentData.promoItem;
+        document.getElementById('f_promoValidity').value = currentData.promoValidity;
+        document.getElementById('f_slogan').value = currentData.slogan;
+        document.getElementById('f_news').value = currentData.news;
+        document.getElementById('f_services').value = currentData.services;
+      }
+
+      function readFormData() {
+        currentData.businessName = document.getElementById('f_businessName').value;
+        currentData.ownerName = document.getElementById('f_ownerName').value;
+        currentData.phone = document.getElementById('f_phone').value;
+        currentData.location = document.getElementById('f_location').value;
+        currentData.hours = document.getElementById('f_hours').value;
+        currentData.discount = document.getElementById('f_discount').value;
+        currentData.promoItem = document.getElementById('f_promoItem').value;
+        currentData.promoValidity = document.getElementById('f_promoValidity').value;
+        currentData.slogan = document.getElementById('f_slogan').value;
+        currentData.news = document.getElementById('f_news').value;
+        currentData.services = document.getElementById('f_services').value;
+      }
+
+      function parseServices(raw) {
+        if (!raw) return [];
+        return raw.split('\n')
+          .map(line => {
+            const parts = line.split('|');
+            return {
+              name: (parts[0] || '').trim(),
+              price: (parts[1] || '').trim()
+            };
+          })
+          .filter(item => item.name);
+      }
+
+      function getThemeColors(tradeKey = currentTrade) {
+        if (activePalette !== 'default' && PALETTES[activePalette]) {
+          return PALETTES[activePalette];
+        }
+        return TRADES_DATA[tradeKey].colors;
+      }
+
+      // =========================================================================
+      // RENDERIZADOR DEL SHOWROOM / CATÁLOGO VISUAL (DESDE EL INICIO)
+      // =========================================================================
+      function renderGallery() {
+        const tradesToRender = currentFilterTrade === 'all' 
+          ? Object.keys(TRADES_DATA) 
+          : [currentFilterTrade];
+
+        let totalCards = 0;
+        let html = '';
+
+        tradesToRender.forEach(tradeKey => {
+          const trade = TRADES_DATA[tradeKey];
+          const colors = getThemeColors(tradeKey);
+          const iconSvg = trade.icon;
+          const data = trade.defaults;
+          const servicesList = parseServices(data.services);
+
+          const styles = [
+            { name: 'Presentación & Marca', tag: 'Flyer A' },
+            { name: 'Catálogo & Precios', tag: 'Flyer B' },
+            { name: 'Promoción & Descuento', tag: 'Flyer C' },
+            { name: 'Proceso de Trabajo', tag: 'Flyer D' }
+          ];
+
+          styles.forEach((st, idx) => {
+            totalCards++;
+            
+            // Generar vista previa en miniatura
+            let contentHtml = '';
+            if (idx === 0) {
+              contentHtml = `
+                <div class="flex justify-between items-center border-b border-current/10 pb-2 mb-2">
+                  <div class="w-6 h-6 p-1 rounded bg-current/10" style="color:${colors.accent}">${iconSvg}</div>
+                  <span class="text-[2.2cqw] font-bold opacity-60">${trade.name}</span>
+                </div>
+                <div class="my-auto">
+                  <span class="text-[2.5cqw] font-bold block" style="color:${colors.accent}">${data.ownerName}</span>
+                  <h4 class="text-[5.5cqw] font-black leading-none mb-1">${data.businessName}</h4>
+                  <p class="text-[2.8cqw] opacity-80 line-clamp-2">${data.slogan}</p>
+                </div>
+                <div class="pt-2 border-t border-current/10 flex justify-between text-[2.5cqw] font-mono">
+                  <span>${data.phone}</span>
+                  <span>${data.location}</span>
+                </div>
+              `;
+            } else if (idx === 1) {
+              contentHtml = `
+                <div class="text-center border-b border-current/10 pb-2 mb-2">
+                  <h4 class="text-[4.5cqw] font-black" style="color:${colors.accent}">Lista de Precios</h4>
+                  <span class="text-[2.2cqw] font-bold opacity-60">${data.businessName}</span>
+                </div>
+                <div class="my-auto space-y-1">
+                  ${servicesList.slice(0, 3).map(s => `
+                    <div class="flex justify-between text-[2.5cqw]">
+                      <span class="truncate">${s.name}</span>
+                      <span class="font-bold" style="color:${colors.accent}">$${s.price}</span>
+                    </div>
+                  `).join('')}
+                </div>
+                <div class="pt-2 border-t border-current/10 text-center text-[2.6cqw] font-mono font-bold">
+                  ${data.phone}
+                </div>
+              `;
+            } else if (idx === 2) {
+              contentHtml = `
+                <div class="flex justify-between items-center">
+                  <span class="px-2 py-0.5 rounded text-[2cqw] font-black text-white" style="background-color:${colors.accent}">OFERTA</span>
+                  <div class="w-5 h-5" style="color:${colors.accent}">${iconSvg}</div>
+                </div>
+                <div class="my-auto text-center">
+                  <div class="text-[14cqw] font-black leading-none" style="color:${colors.accent}">-${data.discount}%</div>
+                  <h5 class="text-[4cqw] font-bold uppercase">${data.promoItem}</h5>
+                </div>
+                <div class="text-center text-[2.5cqw] font-mono font-bold">
+                  Llama al: ${data.phone}
+                </div>
+              `;
+            } else {
+              contentHtml = `
+                <div class="border-b border-current/10 pb-1 mb-1">
+                  <h4 class="text-[4cqw] font-black">${data.businessName}</h4>
+                  <span class="text-[2cqw] opacity-60">Pasos de Servicio</span>
+                </div>
+                <div class="my-auto space-y-1 text-[2.4cqw]">
+                  <div class="flex gap-1.5 items-center"><span class="w-3 h-3 rounded-full text-white text-[1.8cqw] flex items-center justify-center font-bold" style="background:${colors.accent}">1</span><span>Cotización</span></div>
+                  <div class="flex gap-1.5 items-center"><span class="w-3 h-3 rounded-full text-white text-[1.8cqw] flex items-center justify-center font-bold" style="background:${colors.accent}">2</span><span>Evaluación</span></div>
+                  <div class="flex gap-1.5 items-center"><span class="w-3 h-3 rounded-full text-white text-[1.8cqw] flex items-center justify-center font-bold" style="background:${colors.accent}">3</span><span>Ejecución</span></div>
+                </div>
+                <div class="pt-1 border-t border-current/10 text-[2.4cqw] font-mono">${data.phone}</div>
+              `;
+            }
+
+            html += `
+              <div class="group bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
+                <!-- Preview Header Card -->
+                <div class="p-3 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <div class="w-5 h-5 text-slate-700">${iconSvg}</div>
+                    <span class="text-xs font-bold text-slate-800">${trade.name}</span>
+                  </div>
+                  <span class="text-[10px] bg-slate-200 font-bold px-2 py-0.5 rounded text-slate-600 uppercase">${st.tag}</span>
+                </div>
+
+                <!-- Template Canvas Thumbnail -->
+                <div class="p-4 bg-slate-100 flex-1 flex items-center justify-center">
+                  <div class="flyer-card ${galAspect} w-full rounded-xl p-4 flex flex-col justify-between shadow-md group-hover:scale-[1.02] transition-transform duration-300" style="background-color: ${colors.bg}; color: ${colors.text};">
+                    ${contentHtml}
+                  </div>
+                </div>
+
+                <!-- Action Footer -->
+                <div class="p-3 bg-white flex items-center justify-between gap-2 border-t border-slate-100">
+                  <span class="text-xs font-semibold text-slate-500">${st.name}</span>
+                  <button data-open-trade="${tradeKey}" data-tab="${idx === 1 ? 'flyers' : 'flyers'}" class="open-template-btn px-3 py-1.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-xs font-bold transition flex items-center gap-1 shadow-sm">
+                    <span>Editar Plantilla ➔</span>
+                  </button>
+                </div>
+              </div>
+            `;
+          });
+        });
+
+        galleryGrid.innerHTML = html;
+        galleryCountBadge.textContent = `${totalCards} plantillas activas`;
+        galleryTitleText.textContent = currentFilterTrade === 'all' 
+          ? 'Todas las Plantillas por Oficio' 
+          : `Plantillas de ${TRADES_DATA[currentFilterTrade].name}`;
+      }
+
+      // RENDERIZADOR DEL EDITOR / CANVAS
+      function renderAll() {
+        renderFlyers();
+        renderCards();
+        applyEditingState();
+      }
+
+      function renderFlyers() {
+        const colors = getThemeColors();
+        const trade = TRADES_DATA[currentTrade];
+        const servicesList = parseServices(currentData.services);
+        const iconSvg = trade.icon;
+
+        const cardStyle = `background-color: ${colors.bg}; color: ${colors.text};`;
+
+        // 1. Diseño A: Presentación / Marca Social
+        const flyerA = `
+          <div class="flyer-card ${activeAspect} rounded-2xl overflow-hidden p-6 flex flex-col justify-between border border-slate-200/50" style="${cardStyle}">
+            <div class="flex items-center justify-between border-b pb-4 border-current/10">
+              <div class="w-10 h-10 p-2 rounded-xl" style="background-color: ${colors.cardBg}; color: ${colors.accent}">
+                ${iconSvg}
+              </div>
+              <span class="text-[10cqw] font-black tracking-tighter opacity-15 uppercase">${currentTrade}</span>
+            </div>
+            
+            <div class="my-auto py-4">
+              <span class="text-[3.2cqw] font-bold uppercase tracking-widest block mb-1 opacity-80" style="color: ${colors.accent}" contenteditable="true" data-key="ownerName">${currentData.ownerName}</span>
+              <h2 class="text-[8.5cqw] font-black leading-[0.95] tracking-tight mb-3" contenteditable="true" data-key="businessName">${currentData.businessName}</h2>
+              <p class="text-[3.8cqw] font-medium leading-relaxed opacity-90 mb-4" contenteditable="true" data-key="slogan">${currentData.slogan}</p>
+              
+              <div class="flex flex-wrap gap-1.5 mt-2">
+                ${servicesList.slice(0, 4).map(s => `
+                  <span class="text-[2.8cqw] font-bold px-3 py-1 rounded-full border border-current/20">${s.name}</span>
+                `).join('')}
+              </div>
+            </div>
+
+            <div class="pt-4 border-t border-current/10 flex items-center justify-between gap-2">
+              <div>
+                <p class="text-[2.8cqw] font-bold uppercase opacity-75">Contacto & Citas</p>
+                <p class="text-[4cqw] font-black font-mono" contenteditable="true" data-key="phone">${currentData.phone}</p>
+              </div>
+              <div class="text-right">
+                <p class="text-[2.8cqw] font-bold opacity-75" contenteditable="true" data-key="location">${currentData.location}</p>
+                <p class="text-[2.5cqw] opacity-60" contenteditable="true" data-key="hours">${currentData.hours}</p>
+              </div>
+            </div>
+          </div>
+        `;
+
+        // 2. Diseño B: Menú de Precios & Lista de Servicios
+        const flyerB = `
+          <div class="flyer-card ${activeAspect} rounded-2xl overflow-hidden p-6 flex flex-col justify-between border border-slate-200/50" style="${cardStyle}">
+            <div>
+              <div class="text-center pb-4 border-b border-current/10">
+                <h3 class="text-[3.2cqw] font-bold uppercase tracking-widest opacity-75" contenteditable="true" data-key="businessName">${currentData.businessName}</h3>
+                <h2 class="text-[7cqw] font-black tracking-tight" style="color: ${colors.accent}">Servicios & Precios</h2>
+              </div>
+              
+              <div class="mt-4 flex flex-col gap-2.5">
+                ${servicesList.slice(0, 6).map(s => `
+                  <div class="flex items-baseline justify-between text-[3.4cqw] gap-2">
+                    <span class="font-semibold">${s.name}</span>
+                    <span class="flex-1 border-b border-dotted border-current/30 mx-1"></span>
+                    <span class="font-extrabold font-mono" style="color: ${colors.accent}">${s.price ? '$' + s.price : 'Cotizar'}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <div class="mt-auto pt-4 border-t border-current/10 bg-current/5 -mx-6 -mb-6 p-6 flex items-center justify-between">
+              <div>
+                <span class="text-[2.6cqw] font-bold uppercase tracking-wider block opacity-70">Agenda por WhatsApp</span>
+                <span class="text-[4.5cqw] font-black font-mono" contenteditable="true" data-key="phone">${currentData.phone}</span>
+              </div>
+              <div class="w-8 h-8 p-1.5 rounded-lg" style="background-color: ${colors.accent}; color: white">
+                ${iconSvg}
+              </div>
+            </div>
+          </div>
+        `;
+
+        // 3. Diseño C: Promoción / Descuento Explosivo
+        const flyerC = `
+          <div class="flyer-card ${activeAspect} rounded-2xl overflow-hidden p-6 flex flex-col justify-between border border-slate-200/50 relative" style="${cardStyle}">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="px-2.5 py-1 rounded-md text-[2.8cqw] font-black uppercase tracking-wider text-white" style="background-color: ${colors.accent}">¡Oferta Especial!</span>
+                <h3 class="text-[4cqw] font-extrabold mt-2" contenteditable="true" data-key="businessName">${currentData.businessName}</h3>
+              </div>
+              <div class="w-10 h-10 p-2 rounded-xl" style="background-color: ${colors.cardBg}; color: ${colors.accent}">
+                ${iconSvg}
+              </div>
+            </div>
+
+            <div class="my-auto text-center py-2">
+              <div class="inline-block text-[22cqw] font-black leading-none tracking-tighter" style="color: ${colors.accent}">
+                -<span contenteditable="true" data-key="discount">${currentData.discount}</span>%
+              </div>
+              <h2 class="text-[6.5cqw] font-black leading-tight uppercase tracking-tight" contenteditable="true" data-key="promoItem">
+                En ${currentData.promoItem}
+              </h2>
+              <p class="text-[3.2cqw] font-bold opacity-75 mt-2" contenteditable="true" data-key="promoValidity">${currentData.promoValidity}</p>
+            </div>
+
+            <div class="p-4 rounded-xl border border-current/15 text-center bg-current/5">
+              <p class="text-[3cqw] font-bold uppercase tracking-wider opacity-80">Menciona este flyer al llamar</p>
+              <p class="text-[5cqw] font-black font-mono mt-0.5" contenteditable="true" data-key="phone">${currentData.phone}</p>
+            </div>
+          </div>
+        `;
+
+        // 4. Diseño D: Pasos de Trabajo / Proceso
+        const flyerD = `
+          <div class="flyer-card ${activeAspect} rounded-2xl overflow-hidden p-6 flex flex-col justify-between border border-slate-200/50" style="${cardStyle}">
+            <div class="border-b pb-3 border-current/10">
+              <span class="text-[2.8cqw] font-bold uppercase tracking-widest opacity-70 block">¿Cómo trabajamos?</span>
+              <h2 class="text-[6.5cqw] font-black leading-tight" contenteditable="true" data-key="businessName">${currentData.businessName}</h2>
+            </div>
+
+            <div class="my-auto flex flex-col gap-3 py-2">
+              <div class="flex items-start gap-3">
+                <span class="w-7 h-7 rounded-full flex items-center justify-center font-black text-[3.2cqw] text-white shrink-0" style="background-color: ${colors.accent}">1</span>
+                <div>
+                  <h4 class="text-[3.5cqw] font-bold leading-snug">Contacto & Cotización</h4>
+                  <p class="text-[2.8cqw] opacity-75">Envíanos un mensaje con tu solicitud o idea.</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3">
+                <span class="w-7 h-7 rounded-full flex items-center justify-center font-black text-[3.2cqw] text-white shrink-0" style="background-color: ${colors.accent}">2</span>
+                <div>
+                  <h4 class="text-[3.5cqw] font-bold leading-snug">Evaluación o Visita</h4>
+                  <p class="text-[2.8cqw] opacity-75">Revisamos requerimientos en ${currentData.location}.</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3">
+                <span class="w-7 h-7 rounded-full flex items-center justify-center font-black text-[3.2cqw] text-white shrink-0" style="background-color: ${colors.accent}">3</span>
+                <div>
+                  <h4 class="text-[3.5cqw] font-bold leading-snug">Ejecución Profesional</h4>
+                  <p class="text-[2.8cqw] opacity-75">Realizamos el trabajo con garantía de calidad.</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3">
+                <span class="w-7 h-7 rounded-full flex items-center justify-center font-black text-[3.2cqw] text-white shrink-0" style="background-color: ${colors.accent}">4</span>
+                <div>
+                  <h4 class="text-[3.5cqw] font-bold leading-snug">Entrega & Satisfacción</h4>
+                  <p class="text-[2.8cqw] opacity-75">Garantía respaldada por ${currentData.ownerName}.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-3 border-t border-current/10 flex items-center justify-between">
+              <span class="text-[3.2cqw] font-black font-mono" contenteditable="true" data-key="phone">${currentData.phone}</span>
+              <span class="text-[2.6cqw] font-bold opacity-75" contenteditable="true" data-key="hours">${currentData.hours}</span>
+            </div>
+          </div>
+        `;
+
+        flyersGrid.innerHTML = flyerA + flyerB + flyerC + flyerD;
+      }
+
+      function renderCards() {
+        const colors = getThemeColors();
+        const trade = TRADES_DATA[currentTrade];
+        const iconSvg = trade.icon;
+        const servicesList = parseServices(currentData.services);
+
+        const qrSvg = `
+          <svg class="w-full h-full" viewBox="0 0 24 24" fill="currentColor">
+            <rect x="2" y="2" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/>
+            <rect x="4" y="4" width="4" height="4" fill="currentColor"/>
+            <rect x="14" y="2" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/>
+            <rect x="16" y="4" width="4" height="4" fill="currentColor"/>
+            <rect x="2" y="14" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/>
+            <rect x="4" y="16" width="4" height="4" fill="currentColor"/>
+            <rect x="14" y="14" width="3" height="3" fill="currentColor"/>
+            <rect x="18" y="14" width="4" height="3" fill="currentColor"/>
+            <rect x="14" y="18" width="4" height="4" fill="currentColor"/>
+            <rect x="19" y="19" width="3" height="3" fill="currentColor"/>
+          </svg>
+        `;
+
+        const cardStyle = `background-color: ${colors.bg}; color: ${colors.text};`;
+
+        // Tarjetas Presentación
+        const card1 = `
+          <div class="flex flex-col gap-3">
+            <h3 class="text-xs font-extrabold text-slate-500 uppercase tracking-wider">Estilo 1: Profesional / Corporativo</h3>
+            <div class="flyer-card aspect-[9/5] rounded-xl p-5 flex flex-col justify-between border border-slate-200" style="${cardStyle}">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h4 class="text-[5cqw] font-black leading-tight" contenteditable="true" data-key="businessName">${currentData.businessName}</h4>
+                  <p class="text-[3cqw] font-semibold opacity-75" style="color: ${colors.accent}" contenteditable="true" data-key="ownerName">${currentData.ownerName}</p>
+                </div>
+                <div class="w-7 h-7 p-1 rounded-md" style="background-color: ${colors.cardBg}; color: ${colors.accent}">
+                  ${iconSvg}
+                </div>
+              </div>
+              <div class="text-[2.8cqw] font-mono space-y-0.5">
+                <p class="font-bold">WhatsApp: ${currentData.phone}</p>
+                <p class="opacity-75">${currentData.location}</p>
+              </div>
+            </div>
+            <div class="flyer-card aspect-[9/5] rounded-xl p-5 flex items-center justify-between border border-slate-200" style="background-color: ${colors.text}; color: ${colors.bg}">
+              <div class="space-y-1 max-w-[65%]">
+                <p class="text-[2.8cqw] font-bold uppercase tracking-wider opacity-60">Nuestros Servicios</p>
+                <p class="text-[2.8cqw] font-medium leading-snug opacity-90">${servicesList.slice(0, 3).map(s => s.name).join(' • ')}</p>
+              </div>
+              <div class="w-14 h-14 p-2 rounded-lg bg-white text-slate-900 flex flex-col items-center justify-center text-center">
+                ${qrSvg}
+                <span class="text-[1.8cqw] font-bold mt-1 uppercase">Escanear</span>
+              </div>
+            </div>
+          </div>
+        `;
+
+        const card2 = `
+          <div class="flex flex-col gap-3">
+            <h3 class="text-xs font-extrabold text-slate-500 uppercase tracking-wider">Estilo 2: Minimalista Limpio</h3>
+            <div class="flyer-card aspect-[9/5] rounded-xl p-6 flex flex-col justify-center items-center text-center border border-slate-200" style="${cardStyle}">
+              <div class="w-8 h-8 p-1.5 rounded-full mb-2" style="background-color: ${colors.accent}; color: white">
+                ${iconSvg}
+              </div>
+              <h4 class="text-[5.5cqw] font-black tracking-tight" contenteditable="true" data-key="businessName">${currentData.businessName}</h4>
+              <p class="text-[2.8cqw] font-medium opacity-70 mt-1" contenteditable="true" data-key="slogan">${currentData.slogan}</p>
+            </div>
+            <div class="flyer-card aspect-[9/5] rounded-xl p-5 flex flex-col justify-between border border-slate-200" style="${cardStyle}">
+              <div class="flex items-center justify-between">
+                <span class="text-[2.8cqw] font-bold uppercase opacity-60">Citas & Consultas</span>
+                <span class="text-[3.2cqw] font-black font-mono" style="color: ${colors.accent}" contenteditable="true" data-key="phone">${currentData.phone}</span>
+              </div>
+              <div class="text-[2.6cqw] opacity-80 border-t border-current/10 pt-2">
+                <p class="font-bold" contenteditable="true" data-key="ownerName">${currentData.ownerName}</p>
+                <p>${currentData.location} — ${currentData.hours}</p>
+              </div>
+            </div>
+          </div>
+        `;
+
+        const card3 = `
+          <div class="flex flex-col gap-3">
+            <h3 class="text-xs font-extrabold text-slate-500 uppercase tracking-wider">Estilo 3: QR Directo a WhatsApp</h3>
+            <div class="flyer-card aspect-[9/5] rounded-xl p-5 flex items-center gap-4 border border-slate-200" style="${cardStyle}">
+              <div class="w-16 h-16 p-2 rounded-xl bg-white text-slate-900 border border-slate-200 shrink-0 flex flex-col items-center justify-center">
+                ${qrSvg}
+              </div>
+              <div>
+                <h4 class="text-[4.8cqw] font-black leading-tight" contenteditable="true" data-key="businessName">${currentData.businessName}</h4>
+                <p class="text-[2.8cqw] font-mono font-bold mt-1" style="color: ${colors.accent}" contenteditable="true" data-key="phone">${currentData.phone}</p>
+                <p class="text-[2.4cqw] opacity-75 mt-0.5" contenteditable="true" data-key="hours">${currentData.hours}</p>
+              </div>
+            </div>
+            <div class="flyer-card aspect-[9/5] rounded-xl p-5 flex flex-col justify-between border border-slate-200" style="background-color: ${colors.accent}; color: white">
+              <div class="flex justify-between items-center">
+                <span class="text-[3cqw] font-black uppercase tracking-wider">Servicio Garantizado</span>
+                <div class="w-6 h-6">${iconSvg}</div>
+              </div>
+              <p class="text-[3.5cqw] font-bold leading-tight" contenteditable="true" data-key="news">${currentData.news}</p>
+              <p class="text-[2.5cqw] opacity-80 font-mono" contenteditable="true" data-key="location">${currentData.location}</p>
+            </div>
+          </div>
+        `;
+
+        cardsGrid.innerHTML = card1 + card2 + card3;
+      }
+
+      // EVENT LISTENERS & LOGIC
+      function setupEventListeners() {
+        // Switcher entre VISTA GALERÍA y VISTA EDITOR
+        viewGalleryBtn.addEventListener('click', showGalleryView);
+        viewEditorBtn.addEventListener('click', () => showEditorView());
+        brandLogoBtn.addEventListener('click', showGalleryView);
+
+        // Delegation para abrir plantillas desde el catálogo visual
+        document.addEventListener('click', (e) => {
+          const btn = e.target.closest('.open-template-btn');
+          if (btn) {
+            const tradeKey = btn.getAttribute('data-open-trade');
+            const targetTab = btn.getAttribute('data-tab') || 'flyers';
+            loadTrade(tradeKey);
+            showEditorView(targetTab);
+            showToast(`Cargada plantilla de ${TRADES_DATA[tradeKey].name}`);
+          }
+
+          // Filtro de oficios en Galería
+          const filterBtn = e.target.closest('.trade-filter-btn');
+          if (filterBtn) {
+            currentFilterTrade = filterBtn.getAttribute('data-filter');
+            document.querySelectorAll('.trade-filter-btn').forEach(b => {
+              b.className = 'trade-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white border border-slate-700';
+            });
+            filterBtn.className = 'trade-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition bg-sky-500 text-white shadow-sm';
+            renderGallery();
+          }
+        });
+
+        // Selector de oficio en header del editor
+        tradeSelector.addEventListener('change', (e) => {
+          loadTrade(e.target.value);
+          showToast(`Cargado oficio: ${TRADES_DATA[e.target.value].name}`);
+        });
+
+        // Toggle Modo Edición directa
+        toggleEditBtn.addEventListener('click', () => {
+          isEditingMode = !isEditingMode;
+          applyEditingState();
+          showToast(isEditingMode ? 'Edición en Canvas ACTIVADA (Haz clic en los textos)' : 'Edición en Canvas DESACTIVADA');
+        });
+
+        // Tabs dentro del Editor
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const tab = e.target.getAttribute('data-tab');
+            switchTab(tab);
+          });
+        });
+
+        // Aspect Ratios Editor
+        btnAspectFeed.addEventListener('click', () => {
+          activeAspect = 'aspect-feed';
+          btnAspectFeed.className = 'px-3 py-1 rounded-lg text-xs font-bold transition bg-white text-slate-800 shadow-sm';
+          btnAspectStory.className = 'px-3 py-1 rounded-lg text-xs font-bold transition text-slate-600 hover:text-slate-900';
+          renderFlyers();
+        });
+
+        btnAspectStory.addEventListener('click', () => {
+          activeAspect = 'aspect-story';
+          btnAspectStory.className = 'px-3 py-1 rounded-lg text-xs font-bold transition bg-white text-slate-800 shadow-sm';
+          btnAspectFeed.className = 'px-3 py-1 rounded-lg text-xs font-bold transition text-slate-600 hover:text-slate-900';
+          renderFlyers();
+        });
+
+        // Aspect Ratios Galería
+        galAspectFeed.addEventListener('click', () => {
+          galAspect = 'aspect-feed';
+          galAspectFeed.className = 'px-3 py-1 rounded-lg text-xs font-bold bg-slate-900 text-white shadow-sm';
+          galAspectStory.className = 'px-3 py-1 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900';
+          renderGallery();
+        });
+
+        galAspectStory.addEventListener('click', () => {
+          galAspect = 'aspect-story';
+          galAspectStory.className = 'px-3 py-1 rounded-lg text-xs font-bold bg-slate-900 text-white shadow-sm';
+          galAspectFeed.className = 'px-3 py-1 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900';
+          renderGallery();
+        });
+
+        // Paleta de colores
+        colorPaletteSelect.addEventListener('change', (e) => {
+          activePalette = e.target.value;
+          renderAll();
+          renderGallery();
+          showToast('Paleta de color actualizada');
+        });
+
+        // Formulario reactivo inputs
+        const formInputs = dataSection.querySelectorAll('input, textarea');
+        formInputs.forEach(input => {
+          input.addEventListener('input', () => {
+            readFormData();
+            renderAll();
+          });
+        });
+
+        // Botón Restablecer
+        resetBtn.addEventListener('click', () => {
+          if (confirm('¿Restablecer todos los textos a los valores por defecto del oficio?')) {
+            loadTrade(currentTrade);
+            showToast('Valores restablecidos');
+          }
+        });
+
+        // Imprimir / PDF
+        printBtn.addEventListener('click', () => {
+          window.print();
+        });
+
+        // Descargar HTML
+        downloadHtmlBtn.addEventListener('click', downloadHTML);
+
+        // Delegation de edición directa en canvas
+        document.addEventListener('input', (e) => {
+          if (e.target.hasAttribute('contenteditable')) {
+            const key = e.target.getAttribute('data-key');
+            if (key && currentData.hasOwnProperty(key)) {
+              currentData[key] = e.target.innerText;
+              const inputEl = document.getElementById(`f_${key}`);
+              if (inputEl) inputEl.value = e.target.innerText;
+            }
+          }
+        });
+      }
+
+      function showGalleryView() {
+        galleryView.classList.remove('hidden');
+        editorView.classList.add('hidden');
+        editorView.classList.remove('flex');
+        
+        viewGalleryBtn.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold transition bg-sky-600 text-white shadow-sm flex items-center gap-1.5';
+        viewEditorBtn.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white flex items-center gap-1.5';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function showEditorView(tab = 'flyers') {
+        galleryView.classList.add('hidden');
+        editorView.classList.remove('hidden');
+        editorView.classList.add('flex');
+
+        viewEditorBtn.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold transition bg-sky-600 text-white shadow-sm flex items-center gap-1.5';
+        viewGalleryBtn.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white flex items-center gap-1.5';
+        
+        switchTab(tab);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function switchTab(tab) {
+        activeTab = tab;
+        document.querySelectorAll('.tab-btn').forEach(b => {
+          if (b.getAttribute('data-tab') === tab) {
+            b.className = 'tab-btn active px-4 py-1.5 rounded-lg font-bold text-xs sm:text-sm transition bg-white text-sky-600 shadow-sm';
+          } else {
+            b.className = 'tab-btn px-4 py-1.5 rounded-lg font-bold text-xs sm:text-sm transition text-slate-600 hover:text-slate-900';
+          }
+        });
+
+        flyersSection.classList.add('hidden');
+        cardsSection.classList.add('hidden');
+        dataSection.classList.add('hidden');
+
+        if (tab === 'flyers') flyersSection.classList.remove('hidden');
+        if (tab === 'cards') cardsSection.classList.remove('hidden');
+        if (tab === 'data') dataSection.classList.remove('hidden');
+      }
+
+      function applyEditingState() {
+        document.body.classList.toggle('editable-active', isEditingMode);
+        toggleEditBtn.classList.toggle('bg-sky-600', isEditingMode);
+        toggleEditBtn.classList.toggle('text-white', isEditingMode);
+        
+        document.querySelectorAll('[contenteditable]').forEach(el => {
+          el.setAttribute('contenteditable', isEditingMode ? 'true' : 'false');
+        });
+      }
+
+      function showToast(msg) {
+        toast.textContent = msg;
+        toast.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-2');
+        toast.classList.add('opacity-100', 'translate-y-0');
+        setTimeout(() => {
+          toast.classList.remove('opacity-100', 'translate-y-0');
+          toast.classList.add('opacity-0', 'pointer-events-none', 'translate-y-2');
+        }, 2500);
+      }
+
+      function downloadHTML() {
+        readFormData();
+        const cloneDoc = document.documentElement.cloneNode(true);
+        cloneDoc.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+        
+        const htmlContent = '<!doctype html>\n' + cloneDoc.outerHTML;
+        const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `flyers_${currentTrade}_craft.html`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast('Archivo HTML descargado correctamente');
+      }
+
+      window.addEventListener('DOMContentLoaded', init);
+    })();
+  </script>
+
+</body></html>
